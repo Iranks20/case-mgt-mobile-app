@@ -1,16 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import styles from '../../styleSheets/Style';
 
 export default function LoginScreen({ navigation }) {
-  const handleForgotPassword = () => {
-    navigation.navigate('ForgotPassword')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
+  const handleForgotPassword = () => {
+    navigation.navigate('ForgotPassword');
   };
 
-  const handleLogin = () => {
-    navigation.navigate('Dashboard')
-  }
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/applogin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      console.log(password)
+      const result = await response.json();
+
+      console.log(result)
+
+      if (result.error === false) {
+        navigation.navigate('Dashboard');
+      } else {
+        setErrorMessage(result.message);
+      }
+    } catch (error) {
+      console.log("eroorrr", error);
+      setErrorMessage('An error occurred, please try again.');
+    }
+  };
 
   const handleSignUp = () => {
     navigation.navigate('SignUp');
@@ -19,8 +47,8 @@ export default function LoginScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome back!</Text>
-      <TextInput placeholder="Username" style={styles.input} />
-      <TextInput placeholder="Password" style={styles.input} secureTextEntry={true} />
+      <TextInput placeholder="Email" style={styles.input} onChangeText={setEmail} />
+      <TextInput placeholder="Password" style={styles.input} secureTextEntry={true} onChangeText={setPassword} />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
@@ -28,8 +56,9 @@ export default function LoginScreen({ navigation }) {
         <Text style={styles.signUp}>New here? Sign up</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleForgotPassword}>
-        <Text style={styles.ForgotPassword}>Forgot Password?</Text>
+        <Text style={styles.forgotPassword}>Forgot Password?</Text>
       </TouchableOpacity>
+      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
     </View>
   );
 }
