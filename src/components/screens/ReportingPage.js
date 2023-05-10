@@ -1,17 +1,51 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 
 export default function ReportIncident({ navigation }) {
   const [incident, setIncident] = useState('');
   const [details, setDetails] = useState('');
   const [detailsHeight, setDetailsHeight] = useState(150);
   const [location, setLocation] = useState('');
-  const [coordinates, setCoordinates] = useState('');
-  const [reportedBy, setReportedBy] = useState('');
-  const [reportedTo, setReportedTo] = useState('');
+  const [cordinates, setCordinates] = useState('');
+  const [byWho, setByWho] = useState('');
+  const [toWhom, setToWhom] = useState('');
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
+  const handleSubmit = async () => {
+    // Handle form submission logic here beg
+    try {
+      const response = await fetch('http://100.25.26.230:5000/api/v1/incidences', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          incident: incident,
+          details: details,
+          location: location,
+          cordinates: cordinates,
+          byWho: byWho,
+          toWhom: toWhom,
+        }),
+      });
+
+      console.log(incident)
+      const result = await response.json();
+
+      console.log(result)
+
+      if (result.error === false) {
+        Alert.alert(result.message);
+      } else {
+        setErrorMessage(result.message);
+        Alert.alert('Network error');
+
+      }
+    } catch (error) {
+      console.log("eroorrr", error);
+      setErrorMessage('An error occurred, please try again.');
+      Alert.alert('An error occurred, please try again.')
+    }
+    // fhhfjfhjdffhd
   };
   const onContentSizeChange = (event) => {
     const { height } = event.nativeEvent.contentSize;
@@ -38,14 +72,14 @@ export default function ReportIncident({ navigation }) {
         <Text style={styles.label}>Location:</Text>
         <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder='Enter location of the incidence' />
 
-        <Text style={styles.label}>Coordinates:</Text>
-        <TextInput style={styles.input} value={coordinates} onChangeText={setCoordinates} placeholder='enter cordinates of thr incident' />
+        <Text style={styles.label}>Cordinates:</Text>
+        <TextInput style={styles.input} value={cordinates} onChangeText={setCordinates} placeholder='enter cordinates of thr incident' />
 
         <Text style={styles.label}>By Whom:</Text>
-        <TextInput style={styles.input} value={reportedBy} onChangeText={setReportedBy} placeholder='Enter your fullname' />
+        <TextInput style={styles.input} value={byWho} onChangeText={setByWho} placeholder='Enter your fullname' />
 
         <Text style={styles.label}>To Who:</Text>
-        <TextInput style={styles.input} value={reportedTo} onChangeText={setReportedTo} placeholder='reporting to who' />
+        <TextInput style={styles.input} value={toWhom} onChangeText={setToWhom} placeholder='reporting to who' />
 
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitButtonText}>Submit</Text>

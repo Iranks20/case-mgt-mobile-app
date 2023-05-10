@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
 
 export default function LoginScreen({ navigation }) {
@@ -31,6 +32,14 @@ export default function LoginScreen({ navigation }) {
 
       if (result.error === false) {
         navigation.navigate('Dashboard');
+        // userId = result.userId
+        // const storeData = async (userId) => {
+        //   try {
+        //     await AsyncStorage.setItem('userId', userId);
+        //   } catch (e) {
+        //     console.log('Error storing user ID', e);
+        //   }
+        // };
       } else {
         setErrorMessage(result.message);
       }
@@ -59,6 +68,6 @@ export default function LoginScreen({ navigation }) {
         <Text style={styles.forgotPassword}>Forgot Password?</Text>
       </TouchableOpacity>
       {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-    </View>
+    </View> 
   );
 }

@@ -1,24 +1,45 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ViewIncidents({ navigation }) {
-  const [incidents, setIncidents] = useState([
-    { id: '1', title: 'SMUGGLING OF GOODS', status: 'Read', details: 'Details about incident 1' },
-    { id: '2', title: 'CORRUPTION IN OFFICE', status: 'Unread', details: 'Details about incident 2' },
-    { id: '3', title: 'BAD DRIVING ON MASAKA ROAD', status: 'Read', details: 'Details about incident 3' },
-  ]);
+  const [incidents, setIncidents] = useState([]);
+  // const [userId, setUserId] = useState(null);
+
+  // useEffect(() => {
+  //   const getUserId = async () => {
+  //     try {
+  //       const id = await AsyncStorage.getItem('userId');
+  //       setUserId(id);
+  //       console.log(id)
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+
+  //   getUserId();
+  // }, []);
+
+  useEffect(() => {
+    if (userId) {
+      fetch('http://100.25.26.230:5000/api/v1/incidences/new/20')
+        .then((response) => response.json())
+        .then((data) => setIncidents(data))
+        .catch((error) => console.error(error));
+    }
+  }, [userId]);
 
   const renderDetailsButton = (item) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('ViewDetails', { incident: item })}>
+      <TouchableOpacity onPress={() => navigation.navigate('ViewDetails', { incidentId: item.id })}>
         <Text style={styles.viewDetails}>View Details</Text>
       </TouchableOpacity>
     );
-  };
+  };    
 
   const renderItem = ({ item }) => (
     <View style={styles.incident}>
-      <Text style={styles.incidentTitle}>{item.title}</Text>
+      <Text style={styles.incidentTitle}>{item.incident}</Text>
       <Text style={styles.incidentDescription}>Status: {item.status}</Text>
       {renderDetailsButton(item)}
     </View>

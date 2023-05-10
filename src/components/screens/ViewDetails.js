@@ -1,41 +1,67 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const IncidentDetails = () => {
+const IncidentDetails = ({ route }) => {
+  const { incidentId } = route.params;
+  console.log({incidentId})
+  const [incident, setIncident] = useState(null);
+
+  useEffect(() => {
+    const fetchIncident = async () => {
+      const response = await fetch(`http://100.25.26.230:5000/api/v1/incidences/${incidentId}`);
+      const data = await response.json();
+      setIncident(data);
+      // console.log(data)
+    };
+ 
+    fetchIncident();
+  }, []);
+  console.log(incident)
+
+  if (!incident) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
+    {incident.map((incidents) => (
       <View style={styles.card}>
         <View style={styles.header}>
-          <Text style={styles.title}>Theft</Text>
-          <Text style={styles.status}>Read</Text>
+          <Text style={styles.title}>{incidents.incident}</Text>
+          <Text style={styles.status}>{incidents.status}</Text>
         </View>
         <View style={styles.body}>
           <View style={styles.row}>
             <Text style={styles.label}>Location:</Text>
-            <Text style={styles.value}>Uganda</Text>
+            <Text style={styles.value}>{incidents.location}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.label}>Coordinates:</Text>
-            <Text style={styles.value}>200</Text>
+            <Text style={styles.label}>Cordinates:</Text>
+            <Text style={styles.value}>{incidents.cordinates}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Reported by:</Text>
-            <Text style={styles.value}>True citizens</Text>
+            <Text style={styles.value}>{incidents.byWho}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>To whom:</Text>
-            <Text style={styles.value}>Government</Text>
+            <Text style={styles.value}>{incidents.toWhom}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Details:</Text>
-            <Text style={styles.value}>This is a provisional offer made on the basis of the statement of your qualifications as presented on your application form. It is subject to the satisfactory verification of those qualifications by the office of the Academic Registrar at the time of registration. Registration is a mandatory requirement for all students and this must be done within the first three weeks of the Semester.</Text>
+            <Text style={styles.value}>{incidents.details}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Date:</Text>
-            <Text style={styles.value}>Monday</Text>
+            <Text style={styles.value}>{incidents.datetime}</Text>
           </View>
         </View>
       </View>
+    ))}
     </View>
   );
 };
