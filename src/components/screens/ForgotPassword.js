@@ -4,11 +4,42 @@ import styles from '../../styleSheets/Style';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleResetPassword = () => {
+  const handleResetPassword = async () => {
+    try {
+      const response = await fetch('http://100.25.26.230:5000/api/v3/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          // password: password,
+        }),
+      });
+
+      console.log(email)
+      const result = await response.json();
+
+      console.log(result)
+
+      if (result.status === 200) {
+        // await AsyncStorage.setItem('userId', result.userId.toString());
+        // navigation.navigate('Dashboard');
+        Alert.alert('Password Reset Requested', `An email has been sent to ${email} with instructions on how to reset your password.`);
+        // userId = result.userId
+        // console.log(userId)
+      } else {
+        setErrorMessage(result.message);
+      }
+    } catch (error) {
+      console.log("eroorrr", error);
+      setErrorMessage('An error occurred, please try again.');
+    }
     // TODO: Send password reset email to the user's email address
-    Alert.alert('Password Reset Requested', `An email has been sent to ${email} with instructions on how to reset your password.`);
-    setEmail('');
+    // Alert.alert('Password Reset Requested', `An email has been sent to ${email} with instructions on how to reset your password.`);
+    // setEmail('');
   };
 
   return (
@@ -26,6 +57,7 @@ export default function ForgotPasswordScreen() {
       <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
         <Text style={styles.buttonText}>Reset Password</Text>
       </TouchableOpacity>
+      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
     </View>
   );
 }

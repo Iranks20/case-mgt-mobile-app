@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ReportIncident({ navigation }) {
+  const [reporterId, setReporterId] = useState('');
   const [incident, setIncident] = useState('');
   const [details, setDetails] = useState('');
   const [detailsHeight, setDetailsHeight] = useState(150);
@@ -10,6 +12,19 @@ export default function ReportIncident({ navigation }) {
   const [byWho, setByWho] = useState('');
   const [toWhom, setToWhom] = useState('');
 
+  useEffect(() => {
+    const getUserId = async () => {
+      try {
+        const userId = await AsyncStorage.getItem('userId');
+        if (userId !== null) {
+          setReporterId(userId);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserId();
+  }, []);
   const handleSubmit = async () => {
     // Handle form submission logic here beg
     try {
@@ -19,6 +34,7 @@ export default function ReportIncident({ navigation }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          reporterId: reporterId,
           incident: incident,
           details: details,
           location: location,

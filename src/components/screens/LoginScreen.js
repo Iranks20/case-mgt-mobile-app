@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
 
 export default function LoginScreen({ navigation }) {
@@ -31,15 +31,10 @@ export default function LoginScreen({ navigation }) {
       console.log(result)
 
       if (result.error === false) {
+        await AsyncStorage.setItem('userId', result.userId.toString());
         navigation.navigate('Dashboard');
-        // userId = result.userId
-        // const storeData = async (userId) => {
-        //   try {
-        //     await AsyncStorage.setItem('userId', userId);
-        //   } catch (e) {
-        //     console.log('Error storing user ID', e);
-        //   }
-        // };
+        userId = result.userId
+        console.log(userId)
       } else {
         setErrorMessage(result.message);
       }

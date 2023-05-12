@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ViewIncidents({ navigation }) {
   const [incidents, setIncidents] = useState([]);
-  // const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(null);
 
-  // useEffect(() => {
-  //   const getUserId = async () => {
-  //     try {
-  //       const id = await AsyncStorage.getItem('userId');
-  //       setUserId(id);
-  //       console.log(id)
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
+  useEffect(() => {
+    const getUserId = async () => {
+      try {
+        const id = await AsyncStorage.getItem('userId');
+        setUserId(id);
+        console.log(id)
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  //   getUserId();
-  // }, []);
+    getUserId();
+  }, []);
 
   useEffect(() => {
     if (userId) {
-      fetch('http://100.25.26.230:5000/api/v1/incidences/new/20')
+      fetch(`http://100.25.26.230:5000/api/v1/incidences/new/${userId}`)
         .then((response) => response.json())
         .then((data) => setIncidents(data))
         .catch((error) => console.error(error));
@@ -51,7 +51,7 @@ export default function ViewIncidents({ navigation }) {
       <FlatList
         data={incidents}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
         style={styles.list}
       />
     </View>
