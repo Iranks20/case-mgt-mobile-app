@@ -8,6 +8,8 @@ import Dashboard from './src/components/screens/Dashboard';
 import ReportingPage from './src/components/screens/ReportingPage';
 import ViewPage from './src/components/screens/ViewPage';
 import ViewDetails from './src/components/screens/ViewDetails';
+import VerifyOtp from './src/components/screens/VerifyOtp'
+import ChangePassword from './src/components/screens/ChangePassword';
 
 const Stack = createStackNavigator();
 
@@ -104,6 +106,34 @@ export default function App() {
           component={ViewDetails} 
           options={({ route }) => ({
             title: route.params.title,
+            headerStyle: {
+              backgroundColor: 'red',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          })} 
+        />
+        <Stack.Screen 
+          name="VerifyOtp" 
+          component={VerifyOtp}
+          options={({ route }) => ({
+            title: 'verify OTP',
+            headerStyle: {
+              backgroundColor: 'red',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          })} 
+        />
+        <Stack.Screen 
+          name="ChangePassword" 
+          component={ChangePassword}
+          options={({ route }) => ({
+            title: 'Change Password',
             headerStyle: {
               backgroundColor: 'red',
             },

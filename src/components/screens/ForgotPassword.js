@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import styles from '../../styleSheets/Style';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function ForgotPasswordScreen() {
+export default function ForgotPasswordScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleResetPassword = async () => {
     try {
-      const response = await fetch('http://100.25.26.230:5000/api/v3/forgot-password', {
+      const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: email,
-          // password: password,
         }),
       });
 
@@ -25,11 +25,8 @@ export default function ForgotPasswordScreen() {
       console.log(result)
 
       if (result.status === 200) {
-        // await AsyncStorage.setItem('userId', result.userId.toString());
-        // navigation.navigate('Dashboard');
-        Alert.alert('Password Reset Requested', `An email has been sent to ${email} with instructions on how to reset your password.`);
-        // userId = result.userId
-        // console.log(userId)
+        await AsyncStorage.setItem('email', email);
+        navigation.navigate('VerifyOtp');
       } else {
         setErrorMessage(result.message);
       }
