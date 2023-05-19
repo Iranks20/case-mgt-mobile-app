@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ReportIncident({ navigation }) {
@@ -11,6 +11,7 @@ export default function ReportIncident({ navigation }) {
   const [cordinates, setCordinates] = useState('');
   const [byWho, setByWho] = useState('');
   const [toWhom, setToWhom] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // State variable to track loading state
 
   useEffect(() => {
     const getUserId = async () => {
@@ -25,8 +26,10 @@ export default function ReportIncident({ navigation }) {
     };
     getUserId();
   }, []);
+
   const handleSubmit = async () => {
-    // Handle form submission logic here beg
+    setIsLoading(true); // Start loading
+
     try {
       const response = await fetch('http://100.25.26.230:5000/api/v1/incidences', {
         method: 'POST',
@@ -54,15 +57,16 @@ export default function ReportIncident({ navigation }) {
       } else {
         setErrorMessage(result.message);
         Alert.alert('Network error');
-
       }
     } catch (error) {
       console.log("eroorrr", error);
       setErrorMessage('An error occurred, please try again.');
-      Alert.alert('An error occurred, please try again.')
+      Alert.alert('An error occurred, please try again.');
     }
-    // fhhfjfhjdffhd
+
+    setIsLoading(false); // Stop loading
   };
+
   const onContentSizeChange = (event) => {
     const { height } = event.nativeEvent.contentSize;
     setDetailsHeight(Math.max(height, 150));
@@ -82,23 +86,27 @@ export default function ReportIncident({ navigation }) {
           onChangeText={setDetails}
           multiline
           onContentSizeChange={onContentSizeChange}
-          placeholder='Enterall details of the incidence'
+          placeholder='Enter all details of the incidence'
         />
 
         <Text style={styles.label}>Location:</Text>
         <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder='Enter location of the incidence' />
 
-        <Text style={styles.label}>Cordinates:</Text>
-        <TextInput style={styles.input} value={cordinates} onChangeText={setCordinates} placeholder='enter cordinates of thr incident' />
+        <Text style={styles.label}>Coordinates:</Text>
+        <TextInput style={styles.input} value={cordinates} onChangeText={setCordinates} placeholder='Enter coordinates of the incident' />
 
         <Text style={styles.label}>By Whom:</Text>
         <TextInput style={styles.input} value={byWho} onChangeText={setByWho} placeholder='Enter your fullname' />
 
-        <Text style={styles.label}>To Who:</Text>
-        <TextInput style={styles.input} value={toWhom} onChangeText={setToWhom} placeholder='reporting to who' />
+        <Text style={styles.label}>To Whom:</Text>
+        <TextInput style={styles.input} value={toWhom} onChangeText={setToWhom} placeholder='Reporting to whom' />
 
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit</Text>
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} disabled={isLoading}>
+          {isLoading ? (
+            <ActivityIndicator color="#fff" /> // Show loading spinner while loading
+          ) : (
+            <Text style={styles.submitButtonText}>Submit</Text>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>

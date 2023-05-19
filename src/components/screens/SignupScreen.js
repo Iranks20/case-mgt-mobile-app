@@ -1,19 +1,31 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
+import PhoneInput from 'react-native-phone-number-input';
+import { Picker } from '@react-native-picker/picker';
 
 export default function SignUpScreen({ navigation }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [sex, setSex] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const [sex, setSex] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // State variable to track loading state
+  const [showPassword, setShowPassword] = useState(false); // State variable to toggle password visibility
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
 
   const handleSignUp = async () => {
-    // Handle sign up logic here
+    setIsLoading(true); // Start loading
+
+    const formattedPhoneNumber = `+${phoneNumber}`; // Add country code to phone number
+
     try {
       const response = await fetch('http://100.25.26.230:5000/api/v1/reporters', {
         method: 'POST',
@@ -25,44 +37,77 @@ export default function SignUpScreen({ navigation }) {
           lastName: lastName,
           email: email,
           sex: sex,
-          phoneNumber: phoneNumber,
+          phoneNumber: formattedPhoneNumber, // Use formatted phone number
           password: password,
         }),
       });
 
-      console.log(email)
       const result = await response.json();
-      console.log('jfhfhfhhf')
-
-      console.log(result)
 
       if (result.error === false) {
         await AsyncStorage.setItem('userId', result.userId.toString());
         navigation.navigate('Dashboard');
-        userId = result.userId
-        console.log(userId)
       } else {
         setErrorMessage(result.message);
       }
     } catch (error) {
-      console.log("eroorrr", error);
+      console.log("error", error);
       setErrorMessage('An error occurred, please try again.');
     }
+
+    setIsLoading(false); // Stop loading
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-      <TextInput placeholder="firstName" style={styles.input} value={firstName} onChangeText={setFirstName} />
-      <TextInput placeholder="lastName" style={styles.input} value={lastName} onChangeText={setLastName} />
-      <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} />
-      <TextInput placeholder="Sex" style={styles.input} value={sex} onChangeText={setSex} />
-      <TextInput placeholder="phoneNumber" style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} />
-      <TextInput placeholder="Password" style={styles.input} secureTextEntry={true} value={password} onChangeText={setPassword} />
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
-      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-    </View>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Sign Up</Text>
+        <TextInput placeholder="First Name" style={styles.input} value={firstName} onChangeText={setFirstName} />
+        <TextInput placeholder="Last Name" style={styles.input} value={lastName} onChangeText={setLastName} />
+        <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} />
+        <View style={styles.input}>
+          <Picker
+            selectedValue={sex}
+            onValueChange={(itemValue) => setSex(itemValue)}
+            style={{ color: '#000', fontSize: 16 }}
+          >
+            <Picker.Item label="Select Sex" value="" />
+            <Picker.Item label="Male" value="male" />
+            <Picker.Item label="Female" value="female" />
+          </Picker>
+        </View>
+        <View style={styles.phoneInputContainer}>
+          <PhoneInput
+            placeholder="Phone Number"
+            defaultCode="US"
+            layout="first"
+            withShadow
+            containerStyle={styles.phoneInput}
+            onChangeText={setPhoneNumber}
+            value={phoneNumber}
+            textInputProps={{ style: { fontSize: 16 } }}
+          />
+        </View>
+        <View style={styles.passwordContainer}>
+        <TextInput
+          placeholder="Password"
+          style={styles.passwordInput}
+          secureTextEntry={!showPassword}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIconContainer}>
+          <Text style={styles.eyeIcon}>{showPassword ? '🕶️' : '👁️'}</Text>
+        </TouchableOpacity>
+      </View>
+        <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={isLoading}>
+          {isLoading ? (
+            <ActivityIndicator color="#fff" /> // Show loading spinner while loading
+          ) : (
+            <Text style={styles.buttonText}>Sign Up</Text>
+          )}
+        </TouchableOpacity>
+        {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+      </View>
+    </ScrollView>
   );
 }
