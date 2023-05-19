@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, useColorScheme } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, useColorScheme, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
 
 export default function ForgotPasswordScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // State variable to track loading state
   const isDarkMode = useColorScheme() === 'dark';
 
   const handleResetPassword = async () => {
+    setIsLoading(true); // Start loading
+
     try {
       const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/forgot-password', {
         method: 'POST',
@@ -35,9 +38,8 @@ export default function ForgotPasswordScreen({ navigation }) {
       console.log("eroorrr", error);
       setErrorMessage('An error occurred, please try again.');
     }
-    // TODO: Send password reset email to the user's email address
-    // Alert.alert('Password Reset Requested', `An email has been sent to ${email} with instructions on how to reset your password.`);
-    // setEmail('');
+
+    setIsLoading(false); // Stop loading
   };
 
   return (
@@ -53,8 +55,12 @@ export default function ForgotPasswordScreen({ navigation }) {
         autoCapitalize="none"
         placeholderTextColor={isDarkMode ? '#888' : '#777'}
       />
-      <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
-        <Text style={styles.buttonText}>Reset Password</Text>
+      <TouchableOpacity style={styles.button} onPress={handleResetPassword} disabled={isLoading}>
+        {isLoading ? (
+          <ActivityIndicator color="#fff" /> // Show loading spinner while loading
+        ) : (
+          <Text style={styles.buttonText}>Reset Password</Text>
+        )}
       </TouchableOpacity>
       {errorMessage ? <Text style={[styles.error, { color: isDarkMode ? 'red' : '#ff0000' }]}>{errorMessage}</Text> : null}
     </View>

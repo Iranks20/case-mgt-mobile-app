@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, useColorScheme } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, useColorScheme, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
 
@@ -7,6 +7,7 @@ export default function VerifyOtp({ navigation }) {
   const [otp, setOtp] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // State variable to track loading state
   const isDarkMode = useColorScheme() === 'dark';
 
   useEffect(() => {
@@ -23,6 +24,8 @@ export default function VerifyOtp({ navigation }) {
   }, []);
 
   const verifyOtp = async () => {
+    setIsLoading(true); // Start loading
+
     try {
       const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/verify-otp', {
         method: 'POST',
@@ -55,6 +58,8 @@ export default function VerifyOtp({ navigation }) {
       console.log("eroorrr", error);
       setErrorMessage('An error occurred, please try again.');
     }
+
+    setIsLoading(false); // Stop loading
   };
 
   return (
@@ -70,8 +75,12 @@ export default function VerifyOtp({ navigation }) {
         autoCapitalize="none"
         placeholderTextColor={isDarkMode ? '#888' : '#777'}
       />
-      <TouchableOpacity style={styles.button} onPress={verifyOtp}>
-        <Text style={styles.buttonText}>Verify OTP</Text>
+      <TouchableOpacity style={styles.button} onPress={verifyOtp} disabled={isLoading}>
+        {isLoading ? (
+          <ActivityIndicator color="#fff" /> // Show loading spinner while loading
+        ) : (
+          <Text style={styles.buttonText}>Verify OTP</Text>
+        )}
       </TouchableOpacity>
       {errorMessage ? <Text style={[styles.error, { color: isDarkMode ? 'red' : '#ff0000' }]}>{errorMessage}</Text> : null}
     </View>
