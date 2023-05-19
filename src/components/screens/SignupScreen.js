@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
 import PhoneInput from 'react-native-phone-number-input';
@@ -19,7 +19,6 @@ export default function SignUpScreen({ navigation }) {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
 
   const handleSignUp = async () => {
     setIsLoading(true); // Start loading
@@ -51,32 +50,77 @@ export default function SignUpScreen({ navigation }) {
         setErrorMessage(result.message);
       }
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
       setErrorMessage('An error occurred, please try again.');
     }
 
     setIsLoading(false); // Stop loading
   };
 
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const containerStyle = {
+    backgroundColor: isDarkMode ? '#000' : '#fff',
+  };
+
+  const inputContainerStyle = {
+    borderColor: isDarkMode ? '#fff' : '#ccc',
+    backgroundColor: isDarkMode ? '#333' : '#fff',
+  };
+
+
+  const passwordContainerStyle = {
+    borderColor: isDarkMode ? '#fff' : '#ccc',
+    backgroundColor: isDarkMode ? '#333' : '#fff',
+  };
+
+  const inputTextStyle = {
+    color: isDarkMode ? '#fff' : '#000',
+  };
+
+  const phoneTextStyle = {
+    color: isDarkMode ? '#000000' : '#000',
+  };
+
+
+  const eyeIconStyle = {
+    color: isDarkMode ? '#fff' : '#000',
+  };
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={styles.container}>
+      <View style={[styles.container, containerStyle]}>
         <Text style={styles.title}>Sign Up</Text>
-        <TextInput placeholder="First Name" style={styles.input} value={firstName} onChangeText={setFirstName} />
-        <TextInput placeholder="Last Name" style={styles.input} value={lastName} onChangeText={setLastName} />
-        <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} />
-        <View style={styles.input}>
+        <TextInput
+          placeholder="First Name"
+          style={[styles.input, inputContainerStyle, inputTextStyle]}
+          value={firstName}
+          onChangeText={setFirstName}
+        />
+        <TextInput
+          placeholder="Last Name"
+          style={[styles.input, inputContainerStyle, inputTextStyle]}
+          value={lastName}
+          onChangeText={setLastName}
+        />
+        <TextInput
+          placeholder="Email"
+          style={[styles.input, inputContainerStyle, inputTextStyle]}
+          value={email}
+          onChangeText={setEmail}
+        />
+        <View style={[styles.input, inputContainerStyle]}>
           <Picker
             selectedValue={sex}
             onValueChange={(itemValue) => setSex(itemValue)}
-            style={{ color: '#000', fontSize: 16 }}
+            style={{ color: inputTextStyle.color, fontSize: 16 }}
           >
             <Picker.Item label="Select Sex" value="" />
             <Picker.Item label="Male" value="male" />
             <Picker.Item label="Female" value="female" />
           </Picker>
         </View>
-        <View style={styles.phoneInputContainer}>
+        <View style={[styles.phoneInputContainer, inputContainerStyle]}>
           <PhoneInput
             placeholder="Phone Number"
             defaultCode="US"
@@ -85,20 +129,20 @@ export default function SignUpScreen({ navigation }) {
             containerStyle={styles.phoneInput}
             onChangeText={setPhoneNumber}
             value={phoneNumber}
-            textInputProps={{ style: { fontSize: 16 } }}
+            textInputProps={{ style: [styles.phoneInput, phoneTextStyle] }}
           />
         </View>
-        <View style={styles.passwordContainer}>
-        <TextInput
-          placeholder="Password"
-          style={styles.passwordInput}
-          secureTextEntry={!showPassword}
-          onChangeText={setPassword}
-        />
-        <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIconContainer}>
-          <Text style={styles.eyeIcon}>{showPassword ? '🕶️' : '👁️'}</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={[styles.passwordContainer, passwordContainerStyle]}>
+          <TextInput
+            placeholder="Password"
+            style={[styles.passwordInput, inputTextStyle]}
+            secureTextEntry={!showPassword}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIconContainer}>
+            <Text style={[styles.eyeIcon, eyeIconStyle]}>{showPassword ? '🕶️' : '👁️'}</Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={isLoading}>
           {isLoading ? (
             <ActivityIndicator color="#fff" /> // Show loading spinner while loading
