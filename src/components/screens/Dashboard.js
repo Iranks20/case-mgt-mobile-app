@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, useColorScheme } from 'react-native';
 
 export default function Dashboard({ navigation }) {
   const handleReportIncident = () => {
@@ -10,18 +10,32 @@ export default function Dashboard({ navigation }) {
     navigation.navigate('ViewPage');
   };
 
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const containerStyle = {
+    backgroundColor: isDarkMode ? '#000' : '#fff',
+  };
+
+  const cardStyle = {
+    backgroundColor: isDarkMode ? '#2c3e50' : '#2196F3',
+  };
+
+  const cardTitleStyle = {
+    color: isDarkMode ? '#fff' : '#fff',
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View style={styles.header}>
         <Image source={require('../../assets/logo_darkkk.jpg')} style={styles.logo} />
-        <Text style={styles.title}>Welcome to Your DashBoard</Text>
+        <Text style={styles.title}>Welcome to Your Dashboard</Text>
       </View>
       <View style={styles.content}>
-        <TouchableOpacity style={styles.card} onPress={handleReportIncident}>
-          <Text style={styles.cardTitle}>Report an Incident</Text>
+        <TouchableOpacity style={[styles.card, cardStyle]} onPress={handleReportIncident}>
+          <Text style={[styles.cardTitle, cardTitleStyle]}>Report an Incident</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card} onPress={handleViewIncidents}>
-          <Text style={styles.cardTitle}>View Your Reported Incidents</Text>
+        <TouchableOpacity style={[styles.card, cardStyle]} onPress={handleViewIncidents}>
+          <Text style={[styles.cardTitle, cardTitleStyle]}>View Your Reported Incidents</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -31,7 +45,6 @@ export default function Dashboard({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -60,7 +73,6 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     height: 150,
-    backgroundColor: '#2c3e50',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -69,6 +81,5 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
   },
 });

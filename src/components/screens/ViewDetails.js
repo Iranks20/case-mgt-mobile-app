@@ -1,67 +1,70 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 
 const IncidentDetails = ({ route }) => {
   const { incidentId } = route.params;
-  console.log({incidentId})
+  console.log({ incidentId })
   const [incident, setIncident] = useState(null);
+  const isDarkMode = useColorScheme() === 'dark';
 
   useEffect(() => {
     const fetchIncident = async () => {
       const response = await fetch(`http://100.25.26.230:5000/api/v1/incidences/${incidentId}`);
       const data = await response.json();
       setIncident(data);
-      // console.log(data)
     };
- 
+
     fetchIncident();
   }, []);
+
   console.log(incident)
 
   if (!incident) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#f5f5f5' }]}>
         <Text>Loading...</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-    {incident.map((incidents) => (
-      <View style={styles.card}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{incidents.incident}</Text>
-          <Text style={styles.status}>{incidents.status}</Text>
+    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#f5f5f5' }]}>
+      {incident.map((incidents) => (
+        <View style={[styles.card, { backgroundColor: isDarkMode ? '#111' : '#fff' }]}>
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.incident}</Text>
+            <Text style={[styles.status, { color: 'green' }]}>
+              {incidents.status}
+            </Text>
+          </View>
+          <View style={styles.body}>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Location:</Text>
+              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.location}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Coordinates:</Text>
+              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.coordinates}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Reported by:</Text>
+              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.byWho}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>To whom:</Text>
+              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.toWhom}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Details:</Text>
+              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.details}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Date:</Text>
+              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.datetime}</Text>
+            </View>
+          </View>
         </View>
-        <View style={styles.body}>
-          <View style={styles.row}>
-            <Text style={styles.label}>Location:</Text>
-            <Text style={styles.value}>{incidents.location}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Cordinates:</Text>
-            <Text style={styles.value}>{incidents.cordinates}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Reported by:</Text>
-            <Text style={styles.value}>{incidents.byWho}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>To whom:</Text>
-            <Text style={styles.value}>{incidents.toWhom}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Details:</Text>
-            <Text style={styles.value}>{incidents.details}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Date:</Text>
-            <Text style={styles.value}>{incidents.datetime}</Text>
-          </View>
-        </View>
-      </View>
-    ))}
+      ))}
     </View>
   );
 };
@@ -71,10 +74,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
   },
   card: {
-    backgroundColor: '#fff',
     borderRadius: 20,
     padding: 20,
     width: '90%',
@@ -91,7 +92,6 @@ const styles = StyleSheet.create({
   status: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'green',
   },
   body: {
     marginBottom: 20,

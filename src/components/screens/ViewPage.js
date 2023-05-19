@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ViewIncidents({ navigation }) {
   const [incidents, setIncidents] = useState([]);
   const [userId, setUserId] = useState(null);
+  const isDarkMode = useColorScheme() === 'dark';
 
   useEffect(() => {
     const getUserId = async () => {
@@ -32,22 +33,22 @@ export default function ViewIncidents({ navigation }) {
   const renderDetailsButton = (item) => {
     return (
       <TouchableOpacity onPress={() => navigation.navigate('ViewDetails', { incidentId: item.id })}>
-        <Text style={styles.viewDetails}>View Details</Text>
+        <Text style={[styles.viewDetails, { color: isDarkMode ? '#2196F3' : 'darkblue' }]}>View Details</Text>
       </TouchableOpacity>
     );
   };    
 
   const renderItem = ({ item }) => (
-    <View style={styles.incident}>
-      <Text style={styles.incidentTitle}>{item.incident}</Text>
-      <Text style={styles.incidentDescription}>Status: {item.status}</Text>
+    <View style={[styles.incident, { backgroundColor: isDarkMode ? '#333' : 'lightblue' }]}>
+      <Text style={[styles.incidentTitle, { color: isDarkMode ? '#fff' : '#000' }]}>{item.incident}</Text>
+      <Text style={[styles.incidentDescription, { color: isDarkMode ? '#fff' : '#000' }]}>Status: {item.status}</Text>
       {renderDetailsButton(item)}
     </View>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Your Reported Incidents</Text>
+    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
+      <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Your Reported Incidents</Text>
       <FlatList
         data={incidents}
         renderItem={renderItem}
@@ -61,7 +62,6 @@ export default function ViewIncidents({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingTop: 50,
@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
   incident: {
     width: '100%',
     height: 100,
-    backgroundColor: 'lightblue',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -87,15 +86,12 @@ const styles = StyleSheet.create({
   incidentTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 5,
   },
   incidentDescription: {
     fontSize: 16,
-    color: '#fff',
   },
   viewDetails: {
-    color: 'darkblue',
     textDecorationLine: 'underline',
     marginTop: 5,
   },

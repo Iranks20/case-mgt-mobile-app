@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
 
@@ -7,6 +7,7 @@ export default function VerifyOtp({ navigation }) {
   const [otp, setOtp] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [email, setEmail] = useState('');
+  const isDarkMode = useColorScheme() === 'dark';
 
   useEffect(() => {
     const getEmail = async () => {
@@ -43,11 +44,11 @@ export default function VerifyOtp({ navigation }) {
       if (result.status === 200) {
         // await AsyncStorage.setItem('userId', result.userId.toString());
         navigation.navigate('ChangePassword');
-        Alert.alert('otp verified successfully');
+        Alert.alert('OTP verified successfully');
         // userId = result.userId
         // console.log(userId)
       } else {
-        Alert.alert('invalid otp');
+        Alert.alert('Invalid OTP');
         setErrorMessage(result.message);
       }
     } catch (error) {
@@ -57,21 +58,22 @@ export default function VerifyOtp({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Forgot Your Password?</Text>
-      <Text style={styles.subtitle}>Enter your otp address and we'll send you instructions on how to reset your password.</Text>
+    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
+      <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Forgot Your Password?</Text>
+      <Text style={[styles.subtitle, { color: isDarkMode ? '#fff' : '#000' }]}>Enter your otp address and we'll send you instructions on how to reset your password.</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { backgroundColor: isDarkMode ? '#333' : '#f2f2f2', color: isDarkMode ? '#fff' : '#000' }]}
         placeholder="Enter OTP"
         keyboardType="numeric"
         value={otp}
         onChangeText={setOtp}
         autoCapitalize="none"
+        placeholderTextColor={isDarkMode ? '#888' : '#777'}
       />
       <TouchableOpacity style={styles.button} onPress={verifyOtp}>
         <Text style={styles.buttonText}>Verify OTP</Text>
       </TouchableOpacity>
-      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+      {errorMessage ? <Text style={[styles.error, { color: isDarkMode ? 'red' : '#ff0000' }]}>{errorMessage}</Text> : null}
     </View>
   );
 }

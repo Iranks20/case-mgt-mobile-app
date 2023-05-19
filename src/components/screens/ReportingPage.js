@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, ActivityIndicator, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ReportIncident({ navigation }) {
@@ -12,6 +12,7 @@ export default function ReportIncident({ navigation }) {
   const [byWho, setByWho] = useState('');
   const [toWhom, setToWhom] = useState('');
   const [isLoading, setIsLoading] = useState(false); // State variable to track loading state
+  const isDarkMode = useColorScheme() === 'dark';
 
   useEffect(() => {
     const getUserId = async () => {
@@ -53,7 +54,8 @@ export default function ReportIncident({ navigation }) {
       console.log(result)
 
       if (result.error === false) {
-        Alert.alert(result.message);
+        navigation.navigate('Dashboard');
+        Alert.alert('Thanks for reporting incidence you can now click on view your reported incidences card to check the status of your Incidence');
       } else {
         setErrorMessage(result.message);
         Alert.alert('Network error');
@@ -72,16 +74,33 @@ export default function ReportIncident({ navigation }) {
     setDetailsHeight(Math.max(height, 150));
   };
 
+  const containerStyle = {
+    backgroundColor: isDarkMode ? '#000' : '#fff',
+  };
+
+  const inputStyle = {
+    borderColor: isDarkMode ? '#fff' : '#ccc',
+    color: isDarkMode ? '#fff' : '#000',
+  };
+
+  const submitButtonStyle = {
+    backgroundColor: isDarkMode ? '#2196F3' : 'blue',
+  };
+
+  const submitButtonTextStyle = {
+    color: '#fff',
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={[styles.container, containerStyle]}>
       <Text style={styles.title}>Report an Incident</Text>
       <View style={styles.form}>
         <Text style={styles.label}>Incident:</Text>
-        <TextInput style={styles.input} value={incident} onChangeText={setIncident} placeholder='Name or title of the incident'/>
+        <TextInput style={[styles.input, inputStyle]} value={incident} onChangeText={setIncident} placeholder='Name or title of the incident'/>
 
         <Text style={styles.label}>Details:</Text>
         <TextInput
-          style={[styles.input, { height: detailsHeight }]}
+          style={[styles.input, styles.detailsInput, inputStyle, { height: detailsHeight }]}
           value={details}
           onChangeText={setDetails}
           multiline
@@ -90,22 +109,22 @@ export default function ReportIncident({ navigation }) {
         />
 
         <Text style={styles.label}>Location:</Text>
-        <TextInput style={styles.input} value={location} onChangeText={setLocation} placeholder='Enter location of the incidence' />
+        <TextInput style={[styles.input, inputStyle]} value={location} onChangeText={setLocation} placeholder='Enter location of the incidence' />
 
         <Text style={styles.label}>Coordinates:</Text>
-        <TextInput style={styles.input} value={cordinates} onChangeText={setCordinates} placeholder='Enter coordinates of the incident' />
+        <TextInput style={[styles.input, inputStyle]} value={cordinates} onChangeText={setCordinates} placeholder='Enter coordinates of the incident' />
 
         <Text style={styles.label}>By Whom:</Text>
-        <TextInput style={styles.input} value={byWho} onChangeText={setByWho} placeholder='Enter your fullname' />
+        <TextInput style={[styles.input, inputStyle]} value={byWho} onChangeText={setByWho} placeholder='Enter your fullname' />
 
         <Text style={styles.label}>To Whom:</Text>
-        <TextInput style={styles.input} value={toWhom} onChangeText={setToWhom} placeholder='Reporting to whom' />
+        <TextInput style={[styles.input, inputStyle]} value={toWhom} onChangeText={setToWhom} placeholder='Reporting to whom' />
 
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} disabled={isLoading}>
+        <TouchableOpacity style={[styles.submitButton, submitButtonStyle]} onPress={handleSubmit} disabled={isLoading}>
           {isLoading ? (
             <ActivityIndicator color="#fff" /> // Show loading spinner while loading
           ) : (
-            <Text style={styles.submitButtonText}>Submit</Text>
+            <Text style={[styles.submitButtonText, submitButtonTextStyle]}>Submit</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -116,7 +135,6 @@ export default function ReportIncident({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -135,7 +153,6 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -146,7 +163,6 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   submitButton: {
-    backgroundColor: 'blue',
     borderRadius: 60,
     padding: 10,
     alignItems: 'center',
@@ -154,6 +170,5 @@ const styles = StyleSheet.create({
   submitButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
   },
 });
