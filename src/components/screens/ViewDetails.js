@@ -30,7 +30,7 @@ const IncidentDetails = ({ route }) => {
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#f5f5f5' }]}>
       {incident.map((incidents) => (
-        <View style={[styles.card, { backgroundColor: isDarkMode ? '#111' : '#fff' }]}>
+        <View key={incidents.id} style={[styles.card, { backgroundColor: isDarkMode ? '#111' : '#fff' }]}>
           <View style={styles.header}>
             <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.incident}</Text>
             <Text style={[styles.status, { color: 'green' }]}>

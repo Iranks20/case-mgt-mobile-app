@@ -91,16 +91,16 @@ export default function LoginScreen({ navigation }) {
         onChangeText={setEmail}
       />
       <View style={[styles.passwordContainer, passwordContainerStyle]}>
-          <TextInput
-            placeholder="Password"
-            style={[styles.passwordInput, inputTextStyle]}
-            secureTextEntry={!showPassword}
-            onChangeText={setPassword}
-          />
-          <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIconContainer}>
-            <Text style={[styles.eyeIcon, eyeIconStyle]}>{showPassword ? '🕶️' : '👁️'}</Text>
-          </TouchableOpacity>
-        </View>
+        <TextInput
+          placeholder="Password"
+          style={[styles.passwordInput, inputTextStyle]}
+          secureTextEntry={!showPassword}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIconContainer}>
+          <Text style={[styles.eyeIcon, eyeIconStyle]}>{showPassword ? '🕶️' : '👁️'}</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
         {isLoading ? (
           <ActivityIndicator color="#fff" /> // Show loading spinner while loading

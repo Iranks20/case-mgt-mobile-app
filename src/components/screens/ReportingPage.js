@@ -55,7 +55,10 @@ export default function ReportIncident({ navigation }) {
 
       if (result.error === false) {
         navigation.navigate('Dashboard');
-        Alert.alert('Thanks for reporting incidence you can now click on view your reported incidences card to check the status of your Incidence');
+        Alert.alert(
+          'Thanks for reporting incidence',
+          'You can now click on "View your reported incidences" to check the status of your incidence.'
+        );
       } else {
         setErrorMessage(result.message);
         Alert.alert('Network error');
