@@ -29,6 +29,16 @@ export default function ReportIncident({ navigation }) {
   }, []);
 
   const handleSubmit = async () => {
+    // Check if any field contains emojis or non-text characters
+  const hasEmojis = /[^\x00-\x7F]+/.test(
+    `${incident}${details}${location}${cordinates}${byWho}${toWhom}`
+  );
+
+  if (hasEmojis) {
+    Alert.alert('Invalid input', 'Please remove any non-text data from the form fields.');
+    return;
+  }
+
     setIsLoading(true); // Start loading
 
     try {
