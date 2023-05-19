@@ -18,6 +18,20 @@ export default function LoginScreen({ navigation }) {
     setIsLoading(true); // Start loading
 
     try {
+      if (!email || !password) {
+        setErrorMessage('Please fill in all required fields.'); // Show error message if any required field is empty
+        setIsLoading(false);
+        return;
+      }
+
+      // Additional email validation
+      if (!validateEmail(email)) {
+        setErrorMessage('Please enter a valid email.'); // Show error message if email is invalid
+        setIsLoading(false);
+        return;
+         
+      }
+
       const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/applogin', {
         method: 'POST',
         headers: {
@@ -81,6 +95,16 @@ export default function LoginScreen({ navigation }) {
     color: isDarkMode ? '#fff' : '#000',
   };
 
+  // ... (previous code)
+
+const validateEmail = (email) => {
+  // Regular expression to validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+// ... (remaining code)
+
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -101,7 +125,12 @@ export default function LoginScreen({ navigation }) {
           <Text style={[styles.eyeIcon, eyeIconStyle]}>{showPassword ? '🕶️' : '👁️'}</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
+      <TouchableOpacity
+        style={[styles.button, !email || !password ? styles.disabledButton : null]}
+        onPress={handleLogin}
+        // disabled={isLoading || !email || !password} 
+        // Disable the button if loading or any required field is empty
+      >
         {isLoading ? (
           <ActivityIndicator color="#fff" /> // Show loading spinner while loading
         ) : (

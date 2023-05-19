@@ -26,6 +26,21 @@ export default function SignUpScreen({ navigation }) {
     const formattedPhoneNumber = `+${phoneNumber}`; // Add country code to phone number
 
     try {
+      // Validate the fields
+      if (!firstName || !lastName || !email || !sex || !phoneNumber || !password) {
+        setErrorMessage('Please fill in all fields.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setErrorMessage('Enter a Valid Email');
+        setIsLoading(false);
+        return;
+      }
+
       const response = await fetch('http://100.25.26.230:5000/api/v1/reporters', {
         method: 'POST',
         headers: {
@@ -108,6 +123,7 @@ export default function SignUpScreen({ navigation }) {
           style={[styles.input, inputContainerStyle, inputTextStyle]}
           value={email}
           onChangeText={setEmail}
+          autoCapitalize="none"
         />
         <View style={[styles.input, inputContainerStyle]}>
           <Picker
