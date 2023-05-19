@@ -12,6 +12,20 @@ export default function ForgotPasswordScreen({ navigation }) {
   const handleResetPassword = async () => {
     setIsLoading(true); // Start loading
 
+    if (email.trim() === '') {
+      setErrorMessage('Please fill in the email field');
+      setIsLoading(false); // Stop loading
+      return;
+    }
+
+    // Email format validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      setErrorMessage('Invalid email format');
+      setIsLoading(false); // Stop loading
+      return;
+    }
+
     try {
       const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/forgot-password', {
         method: 'POST',
@@ -32,7 +46,7 @@ export default function ForgotPasswordScreen({ navigation }) {
         await AsyncStorage.setItem('email', email);
         navigation.navigate('VerifyOtp');
       } else {
-        setErrorMessage(result.message);
+        setErrorMessage(result.error);
       }
     } catch (error) {
       console.log("eroorrr", error);

@@ -48,7 +48,11 @@ export default function ViewIncidents({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
-      <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Your Reported Incidents</Text>
+      {incidents.length > 0 ? (
+        <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Your Reported Incidents</Text>
+      ) : (
+        <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>You haven't reported any Incidents!</Text>
+      )}
       <FlatList
         data={incidents}
         renderItem={renderItem}

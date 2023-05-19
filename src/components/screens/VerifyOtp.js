@@ -26,6 +26,12 @@ export default function VerifyOtp({ navigation }) {
   const verifyOtp = async () => {
     setIsLoading(true); // Start loading
 
+    if (otp.trim() === '') {
+      setErrorMessage('Please fill in the OTP field');
+      setIsLoading(false); // Stop loading
+      return;
+    }
+
     try {
       const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/verify-otp', {
         method: 'POST',
@@ -47,12 +53,12 @@ export default function VerifyOtp({ navigation }) {
       if (result.status === 200) {
         // await AsyncStorage.setItem('userId', result.userId.toString());
         navigation.navigate('ChangePassword');
-        Alert.alert('OTP verified successfully');
+        // Alert.alert('OTP verified successfully');
         // userId = result.userId
         // console.log(userId)
       } else {
-        Alert.alert('Invalid OTP');
-        setErrorMessage(result.message);
+        // Alert.alert('Invalid OTP');
+        setErrorMessage(result.error);
       }
     } catch (error) {
       console.log("eroorrr", error);

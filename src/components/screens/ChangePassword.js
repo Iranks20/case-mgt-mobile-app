@@ -27,6 +27,12 @@ export default function ChangePassword({ navigation }) {
   const changePassword = async () => {
     setIsLoading(true); // Start loading
 
+    if (password.trim() === '') {
+      setErrorMessage('Please fill in the password field');
+      setIsLoading(false); // Stop loading
+      return;
+    }
+
     try {
       const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/change-password', {
         method: 'POST',

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, useColorScheme } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Alert, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
 import PhoneInput from 'react-native-phone-number-input';
@@ -60,6 +60,10 @@ export default function SignUpScreen({ navigation }) {
 
       if (result.error === false) {
         await AsyncStorage.setItem('userId', result.userId.toString());
+        Alert.alert(
+          'Welcome to our incident reporting app! ',
+          'Your account has been created successfully. Press OK to continue.'
+        );
         navigation.navigate('Dashboard');
       } else {
         setErrorMessage(result.message);

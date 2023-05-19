@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation }) {
         userId = result.userId;
         console.log(userId);
       } else {
-        setErrorMessage(result.message);
+        setErrorMessage(result.error);
       }
     } catch (error) {
       console.log('eroorrr', error);
