@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, useColorScheme } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Dashboard({ navigation }) {
+  // const [lastName, setLastName] = useState('');
+  // console.log(lastName)
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const userId = await AsyncStorage.getItem('userId');
+  //       // console.log(userId)
+  //       const response = await fetch(`http://100.25.26.230:5000/api/v1/reporters/${userId}`);
+  //       const data = await response.json();
+  //       console.log(data)
+  //       setLastName(data.lastName);
+  //       console.log(data.lastName)
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+
+  //   fetchData();
+  // }, []);
   const handleReportIncident = () => {
     navigation.navigate('ReportingPage');
   };
@@ -26,10 +47,10 @@ export default function Dashboard({ navigation }) {
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <Image source={require('../../assets/logo_darkkk.jpg')} style={styles.logo} />
-        <Text style={styles.title}>Welcome to Your Dashboard</Text>
-      </View>
+        <Text style={styles.title}>Welcome {lastName}</Text>
+      </View> */}
       <View style={styles.content}>
         <TouchableOpacity style={[styles.card, cardStyle]} onPress={handleReportIncident}>
           <Text style={[styles.cardTitle, cardTitleStyle]}>Report an Incident</Text>
