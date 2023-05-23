@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, ActivityIndicator, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Geolocation from 'react-native-geolocation-service';
+import Geocoder from 'react-native-geocoder-reborn';
 
 export default function ReportIncident({ navigation }) {
   const [reporterId, setReporterId] = useState('');
@@ -11,7 +13,7 @@ export default function ReportIncident({ navigation }) {
   const [cordinates, setCordinates] = useState('');
   const [byWho, setByWho] = useState('');
   const [toWhom, setToWhom] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // State variable to track loading state
+  const [isLoading, setIsLoading] = useState(false);
   const isDarkMode = useColorScheme() === 'dark';
 
   useEffect(() => {
@@ -28,20 +30,62 @@ export default function ReportIncident({ navigation }) {
     getUserId();
   }, []);
 
+  const fetchDeviceLocation = () => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        // setcordinates(`${latitude}, ${longitude}`);
+        setLocation('Device Location');
+        console.log('Device Location:', latitude, longitude);
+
+        // Fetch the address based on cordinates
+        Geocoder.geocodePosition({ lat: latitude, lng: longitude })
+          .then((response) => {
+            if (response.length > 0) {
+              const address = response[0].formattedAddress;
+              console.log('Address:', address);
+              // Update the location state with the address
+              setLocation(address);
+            } else {
+              console.log('No address found for the given cordinates');
+            }
+          })
+          .catch((error) => {
+            console.log('Error fetching address:', error);
+          });
+      },
+      (error) => {
+        console.log('Error fetching device location:', error.message);
+        Alert.alert('Error', 'Failed to fetch device location.');
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+  };
+
   const handleSubmit = async () => {
     // Check if any field contains emojis or non-text characters
-  const hasEmojis = /[^\x00-\x7F]+/.test(
-    `${incident}${details}${location}${cordinates}${byWho}${toWhom}`
-  );
-
-  if (hasEmojis) {
-    Alert.alert('Invalid input', 'Please remove any non-text data from the form fields.');
-    return;
-  }
-
-    setIsLoading(true); // Start loading
-
+    const hasEmojis = /[^\x00-\x7F]+/.test(
+      `${incident}${details}${location}${cordinates}${byWho}${toWhom}`
+    );
+  
+    if (hasEmojis) {
+      Alert.alert('Invalid input', 'Please remove any non-text data from the form fields.');
+      return;
+    }
+  
+    setIsLoading(true);
+  
     try {
+      console.log('Details sent to API:', {
+        reporterId: reporterId,
+        incident: incident,
+        details: details,
+        location: location,
+        cordinates: cordinates,
+        byWho: byWho,
+        toWhom: toWhom,
+      });
+  
       const response = await fetch('http://100.25.26.230:5000/api/v1/incidences', {
         method: 'POST',
         headers: {
@@ -57,12 +101,9 @@ export default function ReportIncident({ navigation }) {
           toWhom: toWhom,
         }),
       });
-
-      console.log(incident)
+      console.log(location)
       const result = await response.json();
-
-      console.log(result)
-
+  
       if (result.error === false) {
         navigation.navigate('Dashboard');
         Alert.alert(
@@ -70,17 +111,18 @@ export default function ReportIncident({ navigation }) {
           'You can now click on "View your reported incidences" to check the status of your incidence.'
         );
       } else {
-        setErrorMessage(result.message);
+        // setErrorMessage(result.message);
         Alert.alert('Network error');
       }
     } catch (error) {
-      console.log("eroorrr", error);
-      setErrorMessage('An error occurred, please try again.');
+      console.log('Error:', error);
+      // setErrorMessage('An error occurred, please try again.');
       Alert.alert('An error occurred, please try again.');
     }
-
-    setIsLoading(false); // Stop loading
+  
+    setIsLoading(false);
   };
+  
 
   const onContentSizeChange = (event) => {
     const { height } = event.nativeEvent.contentSize;
@@ -104,12 +146,21 @@ export default function ReportIncident({ navigation }) {
     color: '#fff',
   };
 
+  useEffect(() => {
+    fetchDeviceLocation();
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={[styles.container, containerStyle]}>
       <Text style={styles.title}>Report an Incident</Text>
       <View style={styles.form}>
         <Text style={styles.label}>Incident:</Text>
-        <TextInput style={[styles.input, inputStyle]} value={incident} onChangeText={setIncident} placeholder='Name or title of the incident'/>
+        <TextInput
+          style={[styles.input, inputStyle]}
+          value={incident}
+          onChangeText={setIncident}
+          placeholder='Name or title of the incident'
+        />
 
         <Text style={styles.label}>Details:</Text>
         <TextInput
@@ -121,21 +172,41 @@ export default function ReportIncident({ navigation }) {
           placeholder='Enter all details of the incidence'
         />
 
-        <Text style={styles.label}>Location:</Text>
-        <TextInput style={[styles.input, inputStyle]} value={location} onChangeText={setLocation} placeholder='Enter location of the incidence' />
+        {/* <Text style={styles.label}>Location:</Text>
+        <TextInput
+          style={[styles.input, inputStyle]}
+          value={location}
+          onChangeText={setLocation}
+          placeholder='Enter location of the incidence'
+        /> */}
 
-        <Text style={styles.label}>Coordinates:</Text>
-        <TextInput style={[styles.input, inputStyle]} value={cordinates} onChangeText={setCordinates} placeholder='Enter coordinates of the incident' />
+        <Text style={styles.label}>Cordinates:</Text>
+        <TextInput
+          style={[styles.input, inputStyle]}
+          value={cordinates}
+          onChangeText={setCordinates}
+          placeholder='Enter cordinates of the incident'
+        />
 
         <Text style={styles.label}>By Whom:</Text>
-        <TextInput style={[styles.input, inputStyle]} value={byWho} onChangeText={setByWho} placeholder='Enter your fullname' />
+        <TextInput
+          style={[styles.input, inputStyle]}
+          value={byWho}
+          onChangeText={setByWho}
+          placeholder='Enter your fullname'
+        />
 
         <Text style={styles.label}>To Whom:</Text>
-        <TextInput style={[styles.input, inputStyle]} value={toWhom} onChangeText={setToWhom} placeholder='Reporting to whom' />
+        <TextInput
+          style={[styles.input, inputStyle]}
+          value={toWhom}
+          onChangeText={setToWhom}
+          placeholder='Reporting to whom'
+        />
 
         <TouchableOpacity style={[styles.submitButton, submitButtonStyle]} onPress={handleSubmit} disabled={isLoading}>
           {isLoading ? (
-            <ActivityIndicator color="#fff" /> // Show loading spinner while loading
+            <ActivityIndicator color="#fff" />
           ) : (
             <Text style={[styles.submitButtonText, submitButtonTextStyle]}>Submit</Text>
           )}

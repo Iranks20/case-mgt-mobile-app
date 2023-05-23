@@ -7,7 +7,7 @@ const DashboardHeader = ({ navigation }) => {
   const [welcomeAnimation] = useState(new Animated.Value(0));
   const [infoAnimation] = useState(new Animated.Value(0));
   const [userData, setUserData] = useState([]);
-  console.log(userData)
+  // console.log(userData)
 
   useEffect(() => {
     startAnimations();
