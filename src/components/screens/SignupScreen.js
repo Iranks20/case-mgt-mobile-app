@@ -65,6 +65,7 @@ export default function SignUpScreen({ navigation }) {
           'Your account has been created successfully. Press OK to continue.'
         );
         navigation.navigate('Dashboard');
+        await AsyncStorage.setItem('isLoggedIn', 'true');
       } else {
         setErrorMessage(result.message);
       }

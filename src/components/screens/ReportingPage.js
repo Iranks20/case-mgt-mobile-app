@@ -12,7 +12,7 @@ export default function ReportIncident({ navigation }) {
   const [location, setLocation] = useState('');
   const [cordinates, setCordinates] = useState('');
   const [byWho, setByWho] = useState('');
-  const [toWhom, setToWhom] = useState('');
+  // const [toWhom, setToWhom] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -30,11 +30,25 @@ export default function ReportIncident({ navigation }) {
     getUserId();
   }, []);
 
+  useEffect(() => {
+    const byWhoValue = async () => {
+      try {
+        const byWho = await AsyncStorage.getItem('byWho');
+        if (byWho !== null) {
+          setByWho(byWho);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    byWhoValue();
+  }, []);
+
   const fetchDeviceLocation = () => {
     Geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        // setcordinates(`${latitude}, ${longitude}`);
+        setCordinates(`${latitude}, ${longitude}`);
         setLocation('Device Location');
         console.log('Device Location:', latitude, longitude);
 
@@ -63,9 +77,13 @@ export default function ReportIncident({ navigation }) {
   };
 
   const handleSubmit = async () => {
+    if (!incident || !details) {
+      Alert.alert('Missing fields', 'Please fill in all the required fields.');
+      return;
+    }
     // Check if any field contains emojis or non-text characters
     const hasEmojis = /[^\x00-\x7F]+/.test(
-      `${incident}${details}${location}${cordinates}${byWho}${toWhom}`
+      `${incident}${details}${cordinates}${byWho}`
     );
   
     if (hasEmojis) {
@@ -83,7 +101,7 @@ export default function ReportIncident({ navigation }) {
         location: location,
         cordinates: cordinates,
         byWho: byWho,
-        toWhom: toWhom,
+        toWhom: 'null',
       });
   
       const response = await fetch('http://100.25.26.230:5000/api/v1/incidences', {
@@ -98,7 +116,7 @@ export default function ReportIncident({ navigation }) {
           location: location,
           cordinates: cordinates,
           byWho: byWho,
-          toWhom: toWhom,
+          toWhom: 'null',
         }),
       });
       console.log(location)
@@ -108,7 +126,7 @@ export default function ReportIncident({ navigation }) {
         navigation.navigate('Dashboard');
         Alert.alert(
           'Thanks for reporting incidence',
-          'You can now click on "View your reported incidences" to check the status of your incidence.'
+          'You can now click on "View your incidences" to check the status of your incidence.'
         );
       } else {
         // setErrorMessage(result.message);
@@ -139,7 +157,7 @@ export default function ReportIncident({ navigation }) {
   };
 
   const submitButtonStyle = {
-    backgroundColor: isDarkMode ? '#2196F3' : 'blue',
+    backgroundColor: isDarkMode ? '#2196F3' : '#2196F3',
   };
 
   const submitButtonTextStyle = {
@@ -152,7 +170,7 @@ export default function ReportIncident({ navigation }) {
 
   return (
     <ScrollView contentContainerStyle={[styles.container, containerStyle]}>
-      <Text style={styles.title}>Report an Incident</Text>
+      {/* <Text style={styles.title}>Report</Text> */}
       <View style={styles.form}>
         <Text style={styles.label}>Incident:</Text>
         <TextInput
@@ -180,29 +198,29 @@ export default function ReportIncident({ navigation }) {
           placeholder='Enter location of the incidence'
         /> */}
 
-        <Text style={styles.label}>Cordinates:</Text>
+        {/* <Text style={styles.label}>Cordinates:</Text>
         <TextInput
           style={[styles.input, inputStyle]}
           value={cordinates}
           onChangeText={setCordinates}
           placeholder='Enter cordinates of the incident'
-        />
+        /> */}
 
-        <Text style={styles.label}>By Whom:</Text>
+        {/* <Text style={styles.label}>By Whom:</Text>
         <TextInput
           style={[styles.input, inputStyle]}
           value={byWho}
           onChangeText={setByWho}
           placeholder='Enter your fullname'
-        />
+        /> */}
 
-        <Text style={styles.label}>To Whom:</Text>
+        {/* <Text style={styles.label}>To Whom:</Text>
         <TextInput
           style={[styles.input, inputStyle]}
           value={toWhom}
           onChangeText={setToWhom}
           placeholder='Reporting to whom'
-        />
+        /> */}
 
         <TouchableOpacity style={[styles.submitButton, submitButtonStyle]} onPress={handleSubmit} disabled={isLoading}>
           {isLoading ? (
@@ -220,7 +238,8 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 40,
+    // justifyContent: 'center',
   },
   title: {
     fontSize: 24,
@@ -228,7 +247,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   form: {
-    width: '80%',
+    width: '90%',
   },
   label: {
     fontSize: 18,

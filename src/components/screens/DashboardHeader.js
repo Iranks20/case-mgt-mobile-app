@@ -39,8 +39,16 @@ const DashboardHeader = ({ navigation }) => {
       const response = await fetch(`http://100.25.26.230:5000/api/v1/reporters/${userId}`);
       const data = await response.json();
 
-      // Update the state with the last name
+      // Update the state with the userdata
       setUserData(data);
+      
+    // Extract firstName and lastName from the userData and store them in local storage
+    if (Array.isArray(data) && data.length > 0) {
+      const { firstName, lastName } = data[0];
+      const byWho = `${firstName} ${lastName}`;
+      console.log(byWho)
+      await AsyncStorage.setItem('byWho', byWho);
+    }
     } catch (error) {
       console.log('Error fetching user details:', error);
     }
@@ -94,7 +102,7 @@ const DashboardHeader = ({ navigation }) => {
       <View style={styles.card}>
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Image source={require('../../assets/logo_darkkk.jpg')} style={styles.logo} />
+            {/* <Image source={require('../../assets/logo_darkkk.jpg')} style={styles.logo} /> */}
             <Text style={styles.title}>Dashboard</Text>
           </View>
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} disabled={isLoading}>
@@ -123,11 +131,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   card: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    // borderBottomRightRadius: 80,
+    backgroundColor: '#2196F3',
     borderRadius: 10,
     padding: 20,
-    marginBottom: 20,
+    // marginBottom: 20,
     width: '100%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -152,7 +159,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2196F3',
+    color: '#fff', // Set the text color to white
   },
   textContainer: {
     marginTop: 10,
@@ -160,23 +167,24 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2196F3',
+    color: '#fff', // Set the text color to white
   },
   infoText: {
     fontSize: 14,
-    color: '#666',
+    color: '#fff', // Set the text color to white
   },
   logoutButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#fff', // Change the background color of the login button
     borderRadius: 4,
     paddingVertical: 10,
     paddingHorizontal: 16,
   },
   logoutButtonText: {
     fontSize: 14,
-    color: '#fff',
+    color: '#2196F3',
     fontWeight: 'bold',
   },
 });
+
 
 export default DashboardHeader;

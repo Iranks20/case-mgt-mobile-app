@@ -1,4 +1,5 @@
 import React from 'react';
+import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../../src/components/screens/LoginScreen';
@@ -17,6 +18,7 @@ const Stack = createStackNavigator();
 export default function AppNavigator({ isLoggedIn }) {
   return (
     <NavigationContainer>
+    <StatusBar translucent={true} backgroundColor="#2196f3" />
       <Stack.Navigator initialRouteName={isLoggedIn ? 'Dashboard' : 'Login'}>
         <Stack.Screen 
           name="Login" 
@@ -24,7 +26,7 @@ export default function AppNavigator({ isLoggedIn }) {
           options={{
             title: 'Login',
             headerStyle: {
-              backgroundColor: 'red',
+              backgroundColor: '#2196F3',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -34,11 +36,11 @@ export default function AppNavigator({ isLoggedIn }) {
         />
         <Stack.Screen 
           name="SignUp" 
-          component={SignUpScreen} 
+          component={SignUpScreen}
           options={{
             title: 'Sign Up',
             headerStyle: {
-              backgroundColor: 'red',
+              backgroundColor: '#2196F3',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -52,7 +54,7 @@ export default function AppNavigator({ isLoggedIn }) {
           options={{
             title: 'Forgot Password',
             headerStyle: {
-              backgroundColor: 'red',
+              backgroundColor: '#2196F3',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -71,9 +73,9 @@ export default function AppNavigator({ isLoggedIn }) {
           name="ReportingPage" 
           component={ReportingPage} 
           options={{
-            title: 'Reporting Page',
+            title: 'Feel Free to Report an Incident',
             headerStyle: {
-              backgroundColor: 'red',
+              backgroundColor: '#2196F3',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -87,7 +89,7 @@ export default function AppNavigator({ isLoggedIn }) {
           options={{
             title: 'View Page',
             headerStyle: {
-              backgroundColor: 'red',
+              backgroundColor: '#2196F3',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -101,7 +103,7 @@ export default function AppNavigator({ isLoggedIn }) {
           options={({ route }) => ({
             title: route.params.title,
             headerStyle: {
-              backgroundColor: 'red',
+              backgroundColor: '#2196F3',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -115,7 +117,7 @@ export default function AppNavigator({ isLoggedIn }) {
           options={({ route }) => ({
             title: 'Verify OTP',
             headerStyle: {
-              backgroundColor: 'red',
+              backgroundColor: '#2196F3',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -129,7 +131,7 @@ export default function AppNavigator({ isLoggedIn }) {
           options={({ route }) => ({
             title: 'Change Password',
             headerStyle: {
-              backgroundColor: 'red',
+              backgroundColor: '#2196F3',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {

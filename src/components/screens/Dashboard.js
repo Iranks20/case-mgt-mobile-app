@@ -1,28 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, useColorScheme } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default function Dashboard({ navigation }) {
-  // const [lastName, setLastName] = useState('');
-  // console.log(lastName)
-
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const userId = await AsyncStorage.getItem('userId');
-  //       // console.log(userId)
-  //       const response = await fetch(`http://100.25.26.230:5000/api/v1/reporters/${userId}`);
-  //       const data = await response.json();
-  //       console.log(data)
-  //       setLastName(data.lastName);
-  //       console.log(data.lastName)
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
-
-  //   fetchData();
-  // }, []);
   const handleReportIncident = () => {
     navigation.navigate('ReportingPage');
   };
@@ -38,25 +18,29 @@ export default function Dashboard({ navigation }) {
   };
 
   const cardStyle = {
-    backgroundColor: isDarkMode ? '#2c3e50' : '#2196F3',
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+    shadowColor: isDarkMode ? '#000' : '#000',
+    shadowOpacity: 0.8,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 20,
+    elevation: 3,
   };
 
   const cardTitleStyle = {
-    color: isDarkMode ? '#fff' : '#fff',
+    color: isDarkMode ? '#fff' : 'black',
   };
 
   return (
     <View style={[styles.container, containerStyle]}>
-      {/* <View style={styles.header}>
-        <Image source={require('../../assets/logo_darkkk.jpg')} style={styles.logo} />
-        <Text style={styles.title}>Welcome {lastName}</Text>
-      </View> */}
       <View style={styles.content}>
-        <TouchableOpacity style={[styles.card, cardStyle]} onPress={handleReportIncident}>
+        <TouchableOpacity style={[styles.card, cardStyle, { marginRight: wp('2%') }]} onPress={handleReportIncident}>
           <Text style={[styles.cardTitle, cardTitleStyle]}>Report an Incident</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.card, cardStyle]} onPress={handleViewIncidents}>
-          <Text style={[styles.cardTitle, cardTitleStyle]}>View Your Reported Incidents</Text>
+        <TouchableOpacity style={[styles.card, cardStyle, { marginLeft: wp('2%') }]} onPress={handleViewIncidents}>
+          <Text style={[styles.cardTitle, cardTitleStyle]}>View Incidents</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -65,42 +49,27 @@ export default function Dashboard({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  header: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: hp('3%'), // Adjust the value as per your needs
+    paddingHorizontal: wp('5%'), // Adjust the value as per your needs
   },
   content: {
-    flex: 2,
-    width: '100%',
-    paddingHorizontal: 20,
-    justifyContent: 'space-around',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: wp('2%'), // Adjust the value as per your needs
   },
   card: {
-    width: '100%',
-    height: 150,
+    width: wp('45%'), // Adjust the value as per your needs
+    height: hp('25%'), // Adjust the value as per your needs
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
   },
   cardTitle: {
-    fontSize: 20,
+    fontSize: wp('5%'), // Adjust the value as per your needs
     fontWeight: 'bold',
   },
 });

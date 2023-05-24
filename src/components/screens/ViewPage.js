@@ -33,25 +33,58 @@ export default function ViewIncidents({ navigation }) {
   const renderDetailsButton = (item) => {
     return (
       <TouchableOpacity onPress={() => navigation.navigate('ViewDetails', { incidentId: item.id })}>
-        <Text style={[styles.viewDetails, { color: isDarkMode ? '#2196F3' : 'darkblue' }]}>View Details</Text>
+        <Text style={[styles.viewDetails, { color: '#2196F3' }]}>View Details</Text>
       </TouchableOpacity>
     );
-  };    
+  };
+
+  const truncateCharacters = (text, characterLimit) => {
+    if (text.length > characterLimit) {
+      return text.substring(0, characterLimit) + '...';
+    }
+    return text;
+  };
 
   const renderItem = ({ item }) => (
-    <View style={[styles.incident, { backgroundColor: isDarkMode ? '#333' : 'lightblue' }]}>
-      <Text style={[styles.incidentTitle, { color: isDarkMode ? '#fff' : '#000' }]}>{item.incident}</Text>
-      <Text style={[styles.incidentDescription, { color: isDarkMode ? '#fff' : '#000' }]}>Status: {item.status}</Text>
+    <View style={[styles.incident, cardStyle]}>
+      <View style={styles.incidentDetails}>
+      <Text style={[styles.incidentTitle, { color: 'black', fontWeight: 'bold' }]}>
+        Title: <Text style={{ fontWeight: 'normal' }}>{truncateCharacters(item.incident, 33)}</Text>
+      </Text>
+      <Text style={[styles.incidentDescription, { color: 'black', fontWeight: 'bold' }]}>
+        Status: <Text style={{ fontWeight: 'normal' }}>{truncateCharacters(item.status, 10)}</Text>
+      </Text>
+
+      </View>
       {renderDetailsButton(item)}
     </View>
   );
 
+  const cardStyle = {
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+    shadowColor: isDarkMode ? '#000' : '#000',
+    shadowOpacity: 0.3,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowRadius: 6,
+    elevation: 6,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+    height: 120,
+    padding: 20,
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
       {incidents.length > 0 ? (
-        <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Your Reported Incidents</Text>
+        <Text style={[styles.title, { color: 'black' }]}>Your Reported Incidents</Text>
       ) : (
-        <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>You haven't reported any Incidents!</Text>
+        <Text style={[styles.title, { color: 'black' }]}>You haven't reported any Incidents!</Text>
       )}
       <FlatList
         data={incidents}
@@ -81,11 +114,13 @@ const styles = StyleSheet.create({
   },
   incident: {
     width: '100%',
-    height: 100,
-    borderRadius: 10,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+  },
+  incidentDetails: {
+    flex: 1,
+    marginRight: 10,
   },
   incidentTitle: {
     fontSize: 20,

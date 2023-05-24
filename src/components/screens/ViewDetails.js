@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet, useColorScheme, ScrollView } from 'react-native';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 
 const IncidentDetails = ({ route }) => {
   const { incidentId } = route.params;
   console.log({ incidentId })
-  const [incident, setIncident] = useState(null);
+  const [incident, setIncident] = useState([]);
   const isDarkMode = useColorScheme() === 'dark';
 
   useEffect(() => {
@@ -21,92 +22,60 @@ const IncidentDetails = ({ route }) => {
 
   if (!incident) {
     return (
-      <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#f5f5f5' }]}>
+      <View style={styles.container}>
         <Text>Loading...</Text>
       </View>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#f5f5f5' }]}>
+    <ScrollView
+      contentContainerStyle={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#f5f5f5' }]}
+    >
       {incident.map((incidents) => (
-        <View key={incidents.id} style={[styles.card, { backgroundColor: isDarkMode ? '#111' : '#fff' }]}>
-          <View style={styles.header}>
-            <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.incident}</Text>
-            <Text style={[styles.status, { color: 'green' }]}>
-              {incidents.status}
-            </Text>
-          </View>
-          <View style={styles.body}>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Location:</Text>
-              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.location}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Coordinates:</Text>
-              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.coordinates}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Reported by:</Text>
-              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.byWho}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>To whom:</Text>
-              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.toWhom}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Details:</Text>
-              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.details}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={[styles.label, { color: isDarkMode ? '#888' : '#000' }]}>Date:</Text>
-              <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.datetime}</Text>
-            </View>
-          </View>
+        <View key={incidents.id}>
+          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Incident:</Text>
+          <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.incident}</Text>
+
+          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Status:</Text>
+          <Text style={[styles.value, { color: 'green' }]}>{incidents.status}</Text>
+
+          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Location:</Text>
+          <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.location}</Text>
+
+          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Cordinates:</Text>
+          <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.cordinates}</Text>
+
+          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Reported by:</Text>
+          <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.byWho}</Text>
+
+          {/* <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>To whom:</Text>
+          <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.toWhom}</Text> */}
+
+          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Details:</Text>
+          <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.details}</Text>
+
+          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Date:</Text>
+          <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.datetime}</Text>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  card: {
-    borderRadius: 20,
-    padding: 20,
-    width: '90%',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+    flexGrow: 1,
+    padding: RFPercentage(2),
   },
   title: {
-    fontSize: 20,
+    fontSize: RFPercentage(2.5),
     fontWeight: 'bold',
-  },
-  status: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  body: {
-    marginBottom: 20,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  label: {
-    width: '30%',
-    fontWeight: 'bold',
+    marginBottom: RFPercentage(1),
   },
   value: {
-    width: '70%',
+    fontSize: RFPercentage(2),
+    marginBottom: RFPercentage(2),
   },
 });
 
