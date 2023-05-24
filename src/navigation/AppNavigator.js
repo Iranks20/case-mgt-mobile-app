@@ -14,10 +14,10 @@ import DashboardHeader from '../../src/components/screens/DashboardHeader';
 
 const Stack = createStackNavigator();
 
-export default function AppNavigator() {
+export default function AppNavigator({ isLoggedIn }) {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName={isLoggedIn ? 'Dashboard' : 'Login'}>
         <Stack.Screen 
           name="Login" 
           component={LoginScreen} 

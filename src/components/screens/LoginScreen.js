@@ -50,6 +50,8 @@ export default function LoginScreen({ navigation }) {
 
       if (result.error === false) {
         await AsyncStorage.setItem('userId', result.userId.toString());
+        // After successful login
+       await AsyncStorage.setItem('isLoggedIn', 'true');
         navigation.navigate('Dashboard');
         userId = result.userId;
         console.log(userId);
