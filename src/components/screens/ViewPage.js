@@ -31,13 +31,13 @@ export default function ViewIncidents({ navigation }) {
     }
   }, [userId]);
 
-  const renderDetailsButton = (item) => {
-    return (
-      <TouchableOpacity onPress={() => navigation.navigate('ViewDetails', { incidentId: item.id })}>
-        <Text style={[styles.viewDetails, { color: '#2196F3' }]}>View Details</Text>
-      </TouchableOpacity>
-    );
-  };
+  // const renderDetailsButton = (item) => {
+  //   return (
+  //     <TouchableOpacity onPress={() => navigation.navigate('ViewDetails', { incidentId: item.id })}>
+  //       <Text style={[styles.viewDetails, { color: '#2196F3' }]}>View Details</Text>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   const truncateCharacters = (text, characterLimit) => {
     if (text.length > characterLimit) {
@@ -49,15 +49,20 @@ export default function ViewIncidents({ navigation }) {
   const renderItem = ({ item }) => (
     <View style={[styles.incident, cardStyle]}>
       <View style={styles.incidentDetails}>
-      <Text style={[styles.incidentTitle, { color: 'black', fontWeight: 'bold' }]}>
-        Title: <Text style={{ fontWeight: 'normal' }}>{truncateCharacters(item.incident, 33)}</Text>
+      <Text style={[styles.incidentTitle, { color: 'black' }]}>
+        Title: <Text style={{ fontWeight: 'normal' }}>{truncateCharacters(item.incident, 25)}</Text>
       </Text>
-      <Text style={[styles.incidentDescription, { color: 'black', fontWeight: 'bold' }]}>
-        Status: <Text style={{ fontWeight: 'normal' }}>{truncateCharacters(item.status, 10)}</Text>
+      <Text style={[styles.incidentDescription, { color: 'black' }]}>
+        Status: <Text tyle={{ color: item.status === 'Read' ? 'green' : 'black' }}>{truncateCharacters(item.status, 10)}</Text>
       </Text>
-
+      <Text style={[styles.incidentDescription, { color: 'black' }]}>
+        Details: <Text style={{ fontWeight: 'normal' }}>{truncateCharacters(item.details, 67)}</Text>
+      </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('ViewDetails', { incidentId: item.id })}>
+        <Text style={[styles.viewDetails, { color: '#2196F3' }]}>Read More</Text>
+      </TouchableOpacity>
       </View>
-      {renderDetailsButton(item)}
+      {/* {renderDetailsButton(item)} */}
     </View>
   );
 
@@ -76,7 +81,7 @@ export default function ViewIncidents({ navigation }) {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
-    height: 120,
+    height: 170,
     padding: 20,
   };
 
@@ -106,7 +111,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     marginBottom: 20,
   },
   list: {
@@ -124,8 +129,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   incidentTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 16,
+    // fontWeight: 'bold',
     marginBottom: 5,
   },
   incidentDescription: {

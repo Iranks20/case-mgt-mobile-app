@@ -83,9 +83,10 @@ export default function ReportIncident({ navigation }) {
       return;
     }
     // Check if any field contains emojis or non-text characters
-    const hasEmojis = /[^\x00-\x7F]+/.test(
+    const hasEmojis = /[\uD800-\uDBFF\uDC00-\uDFFF]|[^0-9a-zA-Z\uD800-\uDBFF\uDC00-\uDFFF\s.,:;'"!@#$%^&*<>?/\[\]{}+=_`~|\\()-]+/.test(
       `${incident}${details}${cordinates}${byWho}`
-    );
+    );    
+       
   
     if (hasEmojis) {
       Alert.alert('Invalid input', 'Please remove any non-text data from the form fields.');
@@ -173,7 +174,7 @@ export default function ReportIncident({ navigation }) {
     <ScrollView contentContainerStyle={[styles.container, containerStyle]}>
       {/* <Text style={styles.title}>Report</Text> */}
       <View style={styles.form}>
-        <Text style={styles.label}>Incident:</Text>
+        <Text style={styles.label}>Incident</Text>
         <TextInput
           style={[styles.input, inputStyle]}
           value={incident}
@@ -181,7 +182,7 @@ export default function ReportIncident({ navigation }) {
           placeholder='Name or title of the incident'
         />
 
-        <Text style={styles.label}>Details:</Text>
+        <Text style={styles.label}>Details</Text>
         <TextInput
           style={[styles.input, styles.detailsInput, inputStyle, { height: detailsHeight }]}
           value={details}
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     marginBottom: 10,
   },
   input: {

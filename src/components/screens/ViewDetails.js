@@ -39,7 +39,9 @@ const IncidentDetails = ({ route }) => {
           <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.incident}</Text>
 
           <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Status:</Text>
-          <Text style={[styles.value, { color: 'green' }]}>{incidents.status}</Text>
+          <Text style={[styles.value, { color: incidents.status === 'Read' ? 'green' : 'black' }]}>
+            {incidents.status}
+          </Text>
 
           <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Location:</Text>
           <Text style={[styles.value, { color: isDarkMode ? '#fff' : '#000' }]}>{incidents.location}</Text>

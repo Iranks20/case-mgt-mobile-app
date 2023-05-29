@@ -87,7 +87,7 @@ export default function AppNavigator({ isLoggedIn }) {
           name="ViewPage" 
           component={ViewPage} 
           options={{
-            title: 'View Page',
+            title: 'My Incidents',
             headerStyle: {
               backgroundColor: '#2196F3',
             },
