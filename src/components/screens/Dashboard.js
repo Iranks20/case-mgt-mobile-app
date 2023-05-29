@@ -35,6 +35,7 @@ export default function Dashboard({ navigation }) {
 
   return (
     <View style={[styles.container, containerStyle]}>
+      <Text style={styles.welcomeMessage}>Welcome to your dashboard!</Text>
       <View style={styles.content}>
         <TouchableOpacity style={[styles.card, cardStyle, { marginRight: wp('2%') }]} onPress={handleReportIncident}>
           <Text style={[styles.cardTitle, cardTitleStyle]}>Report an Incident</Text>
@@ -55,6 +56,11 @@ const styles = StyleSheet.create({
     paddingTop: hp('3%'), // Adjust the value as per your needs
     paddingHorizontal: wp('5%'), // Adjust the value as per your needs
   },
+  welcomeMessage: {
+    fontSize: wp('6%'), // Adjust the value as per your needs
+    fontWeight: 'bold',
+    marginBottom: hp('2%'), // Adjust the value as per your needs
+  },
   content: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -64,7 +70,7 @@ const styles = StyleSheet.create({
   card: {
     width: wp('45%'), // Adjust the value as per your needs
     height: hp('25%'), // Adjust the value as per your needs
-    borderRadius: 10,
+    // borderRadius: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

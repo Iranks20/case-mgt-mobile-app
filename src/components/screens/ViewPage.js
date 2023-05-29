@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BaseUrl from '../../services/api';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -23,7 +24,7 @@ export default function ViewIncidents({ navigation }) {
 
   useEffect(() => {
     if (userId) {
-      fetch(`http://100.25.26.230:5000/api/v1/incidences/new/${userId}`)
+      fetch(`${BaseUrl}/api/v1/incidences/new/${userId}`)
         .then((response) => response.json())
         .then((data) => setIncidents(data))
         .catch((error) => console.error(error));

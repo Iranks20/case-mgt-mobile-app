@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BaseUrl from '../../services/api';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Alert, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
@@ -41,7 +42,7 @@ export default function SignUpScreen({ navigation }) {
         return;
       }
 
-      const response = await fetch('http://100.25.26.230:5000/api/v1/reporters', {
+      const response = await fetch(`${BaseUrl}/api/v1/reporters`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BaseUrl from '../../services/api';
 import { View, Text, TextInput, TouchableOpacity, Alert, useColorScheme, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
@@ -34,7 +35,7 @@ export default function ChangePassword({ navigation }) {
     }
 
     try {
-      const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/change-password', {
+      const response = await fetch(`${BaseUrl}/api/v1/reporters/change-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

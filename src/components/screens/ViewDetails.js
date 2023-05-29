@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BaseUrl from '../../services/api';
 import { View, Text, StyleSheet, useColorScheme, ScrollView } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
@@ -10,7 +11,7 @@ const IncidentDetails = ({ route }) => {
 
   useEffect(() => {
     const fetchIncident = async () => {
-      const response = await fetch(`http://100.25.26.230:5000/api/v1/incidences/${incidentId}`);
+      const response = await fetch(`${BaseUrl}/api/v1/incidences/${incidentId}`);
       const data = await response.json();
       setIncident(data);
     };

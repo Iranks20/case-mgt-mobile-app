@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BaseUrl from '../../services/api';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../../styleSheets/Style';
@@ -32,7 +33,7 @@ export default function LoginScreen({ navigation }) {
          
       }
 
-      const response = await fetch('http://100.25.26.230:5000/api/v1/reporters/applogin', {
+      const response = await fetch(`${BaseUrl}/api/v1/reporters/applogin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

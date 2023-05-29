@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BaseUrl from '../../services/api';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, ActivityIndicator, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
@@ -104,7 +105,7 @@ export default function ReportIncident({ navigation }) {
         toWhom: 'null',
       });
   
-      const response = await fetch('http://100.25.26.230:5000/api/v1/incidences', {
+      const response = await fetch(`${BaseUrl}/api/v1/incidences`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
