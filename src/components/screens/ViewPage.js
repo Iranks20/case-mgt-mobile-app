@@ -53,7 +53,7 @@ export default function ViewIncidents({ navigation }) {
         Title: <Text style={{ fontWeight: 'normal' }}>{truncateCharacters(item.incident, 25)}</Text>
       </Text>
       <Text style={[styles.incidentDescription, { color: 'black' }]}>
-        Status: <Text tyle={{ color: item.status === 'Read' ? 'green' : 'black' }}>{truncateCharacters(item.status, 10)}</Text>
+        Status: <Text style={{ color: item.status === 'Read' ? 'green' : 'black' }}>{truncateCharacters(item.status, 10)}</Text>
       </Text>
       <Text style={[styles.incidentDescription, { color: 'black' }]}>
         Details: <Text style={{ fontWeight: 'normal' }}>{truncateCharacters(item.details, 67)}</Text>

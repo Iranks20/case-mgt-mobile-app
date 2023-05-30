@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import BaseUrl from '../../services/api';
+// import BaseUrl from '../../services/api';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, Animated } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,11 +7,11 @@ const DashboardHeader = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [welcomeAnimation] = useState(new Animated.Value(0));
   const [infoAnimation] = useState(new Animated.Value(0));
-  const [userData, setUserData] = useState([]);
+  // const [userData, setUserData] = useState([]);
 
   useEffect(() => {
     startAnimations();
-    fetchUserDetails();
+    // fetchUserDetails();
   }, []);
 
   const startAnimations = () => {
@@ -30,23 +30,23 @@ const DashboardHeader = ({ navigation }) => {
     ]).start();
   };
 
-  const fetchUserDetails = async () => {
-    try {
-      const userId = await AsyncStorage.getItem('userId');
-      const response = await fetch(`${BaseUrl}/api/v1/reporters/${userId}`);
-      const data = await response.json();
-      setUserData(data);
+  // const fetchUserDetails = async () => {
+  //   try {
+  //     const userId = await AsyncStorage.getItem('userId');
+  //     const response = await fetch(`${BaseUrl}/api/v1/reporters/${userId}`);
+  //     const data = await response.json();
+  //     setUserData(data);
 
-      if (Array.isArray(data) && data.length > 0) {
-        const { firstName, lastName } = data[0];
-        const byWho = `${firstName} ${lastName}`;
-        console.log(byWho);
-        await AsyncStorage.setItem('byWho', byWho);
-      }
-    } catch (error) {
-      console.log('Error fetching user details:', error);
-    }
-  };
+  //     if (Array.isArray(data) && data.length > 0) {
+  //       const { firstName, lastName } = data[0];
+  //       const byWho = `${firstName} ${lastName}`;
+  //       console.log(byWho);
+  //       await AsyncStorage.setItem('byWho', byWho);
+  //     }
+  //   } catch (error) {
+  //     console.log('Error fetching user details:', error);
+  //   }
+  // };
 
   const handleLogout = async () => {
     try {
@@ -100,11 +100,11 @@ const DashboardHeader = ({ navigation }) => {
             )}
           </TouchableOpacity>
         </View>
-        <Animated.View style={[styles.textContainer, welcomeTextStyles]}>
+        {/* <Animated.View style={[styles.textContainer, welcomeTextStyles]}>
           {userData.map((users) => (
             <Text style={styles.welcomeText}>Welcome to your Dashboard, {users.lastName}!</Text>
           ))}
-        </Animated.View>
+        </Animated.View> */}
         <Animated.View style={[styles.textContainer, infoTextStyles]}>
           <Text style={styles.infoText}>Feel free to report incidents using our system.</Text>
         </Animated.View>

@@ -1,8 +1,32 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import BaseUrl from '../../services/api';
 import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, Image } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Dashboard({ navigation }) {
+    const [userData, setUserData] = useState([]);
+    useEffect(() => {
+      fetchUserDetails();
+    }, []);
+
+    const fetchUserDetails = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const response = await fetch(`${BaseUrl}/api/v1/reporters/${userId}`);
+      const data = await response.json();
+      setUserData(data);
+
+      if (Array.isArray(data) && data.length > 0) {
+        const { firstName, lastName } = data[0];
+        const byWho = `${firstName} ${lastName}`;
+        console.log(byWho);
+        await AsyncStorage.setItem('byWho', byWho);
+      }
+    } catch (error) {
+      console.log('Error fetching user details:', error);
+    }
+  };
   const handleReportIncident = () => {
     navigation.navigate('ReportingPage');
   };
@@ -35,7 +59,10 @@ export default function Dashboard({ navigation }) {
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Text style={styles.welcomeMessage}>Welcome to your dashboard!</Text>
+      {/* <Text style={styles.welcomeMessage}>Welcome to your dashboard!</Text> */}
+        {userData.map((users) => (
+          <Text style={styles.welcomeMessage}>Welcome to your Dashboard, {users.lastName}!</Text>
+        ))}
       <View style={styles.content}>
         <TouchableOpacity style={[styles.card, cardStyle, { marginRight: wp('2%') }]} onPress={handleReportIncident}>
           <Image source={require('../../assets/report_incident.png')} style={styles.icon} />
@@ -59,8 +86,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('5%'), // Adjust the value as per your needs
   },
   welcomeMessage: {
-    fontSize: wp('6%'), // Adjust the value as per your needs
-    fontWeight: 'bold',
+    fontSize: wp('4%'), // Adjust the value as per your needs
+    // fontWeight: 'bold',
     marginBottom: hp('2%'), // Adjust the value as per your needs
   },
   content: {
