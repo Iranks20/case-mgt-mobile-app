@@ -31,20 +31,27 @@ export default function ViewIncidents({ navigation }) {
     }
   }, [userId]);
 
-  // const renderDetailsButton = (item) => {
-  //   return (
-  //     <TouchableOpacity onPress={() => navigation.navigate('ViewDetails', { incidentId: item.id })}>
-  //       <Text style={[styles.viewDetails, { color: '#2196F3' }]}>View Details</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
-
   const truncateCharacters = (text, characterLimit) => {
     if (text.length > characterLimit) {
-      return text.substring(0, characterLimit) + '...';
+      const truncatedText = text.substring(0, characterLimit);
+      const lastSpaceIndex = truncatedText.lastIndexOf(' ');
+  
+      if (lastSpaceIndex !== -1) {
+        return truncatedText.substring(0, lastSpaceIndex) + '...';
+      } else {
+        return truncatedText + '...';
+      }
     }
-    return text;
+  
+    const trimmedText = text.trim();
+    const lineBreaksIndex = trimmedText.indexOf('\n');
+    if (lineBreaksIndex !== -1) {
+      return trimmedText.substring(0, lineBreaksIndex) + '...';
+    }
+  
+    return trimmedText;
   };
+  
 
   const renderItem = ({ item }) => (
     <View style={[styles.incident, cardStyle]}>
@@ -62,7 +69,6 @@ export default function ViewIncidents({ navigation }) {
         <Text style={[styles.viewDetails, { color: '#2196F3' }]}>Read More</Text>
       </TouchableOpacity>
       </View>
-      {/* {renderDetailsButton(item)} */}
     </View>
   );
 
@@ -86,7 +92,7 @@ export default function ViewIncidents({ navigation }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
+    <View style={[styles.container, { backgroundColor: isDarkMode ? '#fff' : '#fff' }]}>
       {incidents.length > 0 ? (
         <Text style={[styles.title, { color: 'black' }]}>Your Reported Incidents</Text>
       ) : (
@@ -111,7 +117,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    // fontWeight: 'bold',
     marginBottom: 20,
   },
   list: {
@@ -130,7 +135,6 @@ const styles = StyleSheet.create({
   },
   incidentTitle: {
     fontSize: 16,
-    // fontWeight: 'bold',
     marginBottom: 5,
   },
   incidentDescription: {

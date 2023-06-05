@@ -78,24 +78,24 @@ export default function LoginScreen({ navigation }) {
   const isDarkMode = useColorScheme() === 'dark';
 
   const containerStyle = {
-    backgroundColor: isDarkMode ? '#000' : '#fff',
+    backgroundColor: isDarkMode ? '#fff' : '#fff',
   };
 
   const inputStyle = {
-    borderColor: isDarkMode ? '#fff' : '#ccc',
-    backgroundColor: isDarkMode ? '#333' : '#fff',
-    color: isDarkMode ? '#fff' : '#000',
+    borderColor: isDarkMode ? '#ccc' : '#ccc',
+    backgroundColor: isDarkMode ? '#fff' : '#fff',
+    color: isDarkMode ? '#000' : '#000',
   };
 
   const passwordContainerStyle = {
-    borderColor: isDarkMode ? '#fff' : '#ccc',
-    backgroundColor: isDarkMode ? '#333' : '#fff',
+    borderColor: isDarkMode ? '#ccc' : '#ccc',
+    backgroundColor: isDarkMode ? '#fff' : '#fff',
   };
   const inputTextStyle = {
-    color: isDarkMode ? '#fff' : '#000',
+    color: isDarkMode ? '#000' : '#000',
   };
   const eyeIconStyle = {
-    color: isDarkMode ? '#fff' : '#000',
+    color: isDarkMode ? '#000' : '#000',
   };
 
   // ... (previous code)
@@ -111,16 +111,18 @@ const validateEmail = (email) => {
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Text style={styles.title}>Welcome back!</Text>
+      <Text style={[styles.title, { color: isDarkMode ? '#000' : '#000' }]}>Welcome back!</Text>
       <TextInput
         placeholder="Email"
+        placeholderTextColor={isDarkMode ? '#999' : '#777'}
         style={[styles.input, inputStyle]}
         onChangeText={setEmail}
       />
       <View style={[styles.passwordContainer, passwordContainerStyle]}>
-        <TextInput
-          placeholder="Password"
+        <TextInput         
           style={[styles.passwordInput, inputTextStyle]}
+          placeholder="Password"
+          placeholderTextColor={isDarkMode ? '#999' : '#777'}
           secureTextEntry={!showPassword}
           onChangeText={setPassword}
         />

@@ -14,7 +14,6 @@ export default function ReportIncident({ navigation }) {
   const [location, setLocation] = useState('');
   const [cordinates, setCordinates] = useState('');
   const [byWho, setByWho] = useState('');
-  // const [toWhom, setToWhom] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -165,21 +164,23 @@ export default function ReportIncident({ navigation }) {
   };
 
   const containerStyle = {
-    backgroundColor: isDarkMode ? '#000' : '#fff',
+    backgroundColor: isDarkMode ? '#fff' : '#fff',
   };
 
   const inputStyle = {
-    borderColor: isDarkMode ? '#fff' : '#ccc',
-    color: isDarkMode ? '#fff' : '#000',
+    borderColor: isDarkMode ? '#ccc' : '#ccc',
+    color: isDarkMode ? '#000' : '#000',
   };
 
   const submitButtonStyle = {
-    backgroundColor: isDarkMode ? '#2196F3' : '#2196F3',
+    backgroundColor: '#2196F3',
   };
 
   const submitButtonTextStyle = {
     color: '#fff',
   };
+
+  const textColor = isDarkMode ? '#000' : '#000';
 
   useEffect(() => {
     fetchDeviceLocation();
@@ -189,15 +190,16 @@ export default function ReportIncident({ navigation }) {
     <ScrollView contentContainerStyle={[styles.container, containerStyle]}>
       {/* <Text style={styles.title}>Report</Text> */}
       <View style={styles.form}>
-        <Text style={styles.label}>Incident</Text>
+        <Text style={[styles.label, { color: textColor }]}>Incident</Text>
         <TextInput
           style={[styles.input, inputStyle]}
           value={incident}
           onChangeText={setIncident}
           placeholder='Name or title of the incident'
+          placeholderTextColor={isDarkMode ? '#ccc' : '#ccc'}
         />
 
-        <Text style={styles.label}>Details</Text>
+        <Text style={[styles.label, { color: textColor }]}>Details</Text>
         <TextInput
           style={[styles.input, styles.detailsInput, inputStyle, { height: detailsHeight }]}
           value={details}
@@ -205,47 +207,26 @@ export default function ReportIncident({ navigation }) {
           multiline
           onContentSizeChange={onContentSizeChange}
           placeholder='Enter all details of the incidence'
+          placeholderTextColor={isDarkMode ? '#ccc' : '#ccc'}
         />
 
-        {/* <Text style={styles.label}>Location:</Text>
+        {/* <Text style={[styles.label, { color: textColor }]}>Location</Text>
         <TextInput
           style={[styles.input, inputStyle]}
           value={location}
           onChangeText={setLocation}
-          placeholder='Enter location of the incidence'
+          placeholder='Location of the incidence'
+          placeholderTextColor={isDarkMode ? '#ccc' : '#ccc'}
+          editable={false}
         /> */}
 
-        {/* <Text style={styles.label}>Cordinates:</Text>
-        <TextInput
-          style={[styles.input, inputStyle]}
-          value={cordinates}
-          onChangeText={setCordinates}
-          placeholder='Enter cordinates of the incident'
-        /> */}
-
-        {/* <Text style={styles.label}>By Whom:</Text>
-        <TextInput
-          style={[styles.input, inputStyle]}
-          value={byWho}
-          onChangeText={setByWho}
-          placeholder='Enter your fullname'
-        /> */}
-
-        {/* <Text style={styles.label}>To Whom:</Text>
-        <TextInput
-          style={[styles.input, inputStyle]}
-          value={toWhom}
-          onChangeText={setToWhom}
-          placeholder='Reporting to whom'
-        /> */}
-
-        <TouchableOpacity style={[styles.submitButton, submitButtonStyle]} onPress={handleSubmit} disabled={isLoading}>
-          {isLoading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={[styles.submitButtonText, submitButtonTextStyle]}>Submit</Text>
-          )}
-        </TouchableOpacity>
+        {isLoading ? (
+          <ActivityIndicator style={styles.loading} size='large' color='#000' />
+        ) : (
+          <TouchableOpacity style={[styles.button, submitButtonStyle]} onPress={handleSubmit}>
+            <Text style={[styles.buttonText, submitButtonTextStyle]}>Submit</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
@@ -253,42 +234,43 @@ export default function ReportIncident({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    alignItems: 'center',
-    paddingTop: 40,
-    // justifyContent: 'center',
+    flex: 1,
+    padding: 20,
+  },
+  form: {
+    flex: 1,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     marginBottom: 20,
-  },
-  form: {
-    width: '90%',
   },
   label: {
     fontSize: 18,
-    // fontWeight: 'bold',
     marginBottom: 10,
   },
   input: {
     borderWidth: 1,
     borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    padding: 10,
     marginBottom: 20,
+    fontSize: 16,
   },
   detailsInput: {
-    height: 150,
     textAlignVertical: 'top',
   },
-  submitButton: {
-    borderRadius: 60,
-    padding: 10,
+  button: {
     alignItems: 'center',
+    backgroundColor: '#2196F3',
+    padding: 15,
+    borderRadius: 5,
   },
-  submitButtonText: {
-    fontSize: 18,
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
+  },
+  loading: {
+    marginTop: 20,
   },
 });

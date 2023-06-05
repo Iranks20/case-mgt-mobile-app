@@ -81,50 +81,53 @@ export default function SignUpScreen({ navigation }) {
   const isDarkMode = useColorScheme() === 'dark';
 
   const containerStyle = {
-    backgroundColor: isDarkMode ? '#000' : '#fff',
+    backgroundColor: isDarkMode ? '#fff' : '#fff',
   };
 
   const inputContainerStyle = {
-    borderColor: isDarkMode ? '#fff' : '#ccc',
-    backgroundColor: isDarkMode ? '#333' : '#fff',
+    borderColor: isDarkMode ? '#ccc' : '#ccc',
+    backgroundColor: isDarkMode ? '#fff' : '#fff',
   };
 
 
   const passwordContainerStyle = {
-    borderColor: isDarkMode ? '#fff' : '#ccc',
-    backgroundColor: isDarkMode ? '#333' : '#fff',
+    borderColor: isDarkMode ? '#ccc' : '#ccc',
+    backgroundColor: isDarkMode ? '#fff' : '#fff',
   };
 
   const inputTextStyle = {
-    color: isDarkMode ? '#fff' : '#000',
+    color: isDarkMode ? '#000' : '#000',
   };
 
   const phoneTextStyle = {
-    color: isDarkMode ? '#000000' : '#000',
+    color: isDarkMode ? '#000' : '#000',
   };
 
 
   const eyeIconStyle = {
-    color: isDarkMode ? '#fff' : '#000',
+    color: isDarkMode ? '#000' : '#000',
   };
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={[styles.container, containerStyle]}>
-        <Text style={styles.title}>Sign Up</Text>
+        <Text style={[styles.title, { color: isDarkMode ? '#000' : '#000' }]}>Sign Up</Text>
         <TextInput
+          placeholderTextColor={isDarkMode ? '#999' : '#777'}
           placeholder="First Name"
           style={[styles.input, inputContainerStyle, inputTextStyle]}
           value={firstName}
           onChangeText={setFirstName}
         />
         <TextInput
+         placeholderTextColor={isDarkMode ? '#999' : '#777'}
           placeholder="Last Name"
           style={[styles.input, inputContainerStyle, inputTextStyle]}
           value={lastName}
           onChangeText={setLastName}
         />
         <TextInput
+          placeholderTextColor={isDarkMode ? '#999' : '#777'}
           placeholder="Email"
           style={[styles.input, inputContainerStyle, inputTextStyle]}
           value={email}
@@ -144,6 +147,7 @@ export default function SignUpScreen({ navigation }) {
         </View>
         <View style={[styles.phoneInputContainer, inputContainerStyle]}>
           <PhoneInput
+            placeholderTextColor={isDarkMode ? '#999' : '#777'}
             placeholder="Phone Number"
             defaultCode="US"
             layout="first"
@@ -156,6 +160,7 @@ export default function SignUpScreen({ navigation }) {
         </View>
         <View style={[styles.passwordContainer, passwordContainerStyle]}>
           <TextInput
+            placeholderTextColor={isDarkMode ? '#999' : '#777'}
             placeholder="Password"
             style={[styles.passwordInput, inputTextStyle]}
             secureTextEntry={!showPassword}
