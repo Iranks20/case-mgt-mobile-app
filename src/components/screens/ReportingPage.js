@@ -4,6 +4,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert,
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoder-reborn';
+import { request, PERMISSIONS } from 'react-native-permissions';
 
 export default function ReportIncident({ navigation }) {
   const [reporterId, setReporterId] = useState('');
@@ -45,36 +46,50 @@ export default function ReportIncident({ navigation }) {
     byWhoValue();
   }, []);
 
-  const fetchDeviceLocation = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setCordinates(`${latitude}, ${longitude}`);
-        setLocation('Device Location');
-        console.log('Device Location:', latitude, longitude);
-
-        // Fetch the address based on cordinates
-        Geocoder.geocodePosition({ lat: latitude, lng: longitude })
-          .then((response) => {
-            if (response.length > 0) {
-              const address = response[0].formattedAddress;
-              console.log('Address:', address);
-              // Update the location state with the address
-              setLocation(address);
-            } else {
-              console.log('No address found for the given cordinates');
-            }
-          })
-          .catch((error) => {
-            console.log('Error fetching address:', error);
-          });
-      },
-      (error) => {
-        console.log('Error fetching device location:', error.message);
-        Alert.alert('Error', 'Failed to fetch device location.');
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
+  const fetchDeviceLocation = async () => {
+    try {
+      const granted = await request(
+        Platform.select({
+          android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+          ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+        })
+      );
+  
+      if (granted === 'granted') {
+        Geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setCordinates(`${latitude}, ${longitude}`);
+            setLocation('Device Location');
+            console.log('Device Location:', latitude, longitude);
+  
+            Geocoder.geocodePosition({ lat: latitude, lng: longitude })
+              .then((response) => {
+                if (response.length > 0) {
+                  const address = response[0].formattedAddress;
+                  console.log('Address:', address);
+                  setLocation(address);
+                } else {
+                  console.log('No address found for the given coordinates');
+                }
+              })
+              .catch((error) => {
+                console.log('Error fetching address:', error);
+              });
+          },
+          (error) => {
+            console.log('Error fetching device location:', error.message);
+            Alert.alert('Error', 'Failed to fetch device location.');
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+      } else {
+        Alert.alert('Permission Denied', 'Please grant location permissions to use this feature.');
+      }
+    } catch (error) {
+      console.log('Error requesting location permission:', error);
+      Alert.alert('Error', 'Failed to request location permission.');
+    }
   };
 
   const handleSubmit = async () => {

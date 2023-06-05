@@ -1,5 +1,5 @@
 {
-  "name": "AwesomeProjecttt",
+  "name": "Report Incidents",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -22,6 +22,7 @@
     "react-native-geocoder-reborn": "^0.9.0",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.9.0",
+    "react-native-permissions": "^3.8.0",
     "react-native-phone-number-input": "^2.1.0",
     "react-native-responsive-fontsize": "^0.5.1",
     "react-native-responsive-screen": "^1.4.2",
